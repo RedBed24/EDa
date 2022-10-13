@@ -9,4 +9,7 @@ public class Main {
 
 	}
 
+	static void hola() {
+		System.out.println("hola");
+	}
 }
