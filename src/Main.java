@@ -20,7 +20,7 @@ public class Main {
 			seguir = false;
 		}
 
-		int tiempototal = 0, cuentapaginas= 0;
+		int tiempototal = 0, cuentapaginas= 0, cuentavueltasatras= 0, cuentadiferentes= 0;
 		if (seguir) {
 			while (leerfichero.hasNextLine()) {
 				String linea = leerfichero.nextLine();
@@ -28,9 +28,11 @@ public class Main {
 				if (linea.equals("<=")) { // si es una vuelta atrás
 					s.pop(); // Se quita la página en la que estábamos
 					partes = s.peek().split(","); // se separan la página y el tiempo de la anterior
+					cuentavueltasatras++;
 				} else { // es una URL
 					s.push(linea); // se introduce a la pila
 					partes = linea.split(","); // esa URL se separa del tiempo
+					cuentadiferentes++;
 				}
 
 				cuentapaginas++; // se ha visitado una página más
@@ -39,6 +41,10 @@ public class Main {
 			}
 
 		}
+		System.out.println("Total de páginas visitadas: "+ cuentapaginas);
+		System.out.println("Páginas diferentes visitadas: "+ cuentadiferentes);
+		System.out.println("Vueltas atrás: "+ cuentavueltasatras);
+		System.out.println("Tiempo total invertido: "+ tiempototal);
 		System.out.println("El tiempo medio en las paginas es de: "+ tiempototal/cuentapaginas);
 	}
 
