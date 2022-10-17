@@ -21,6 +21,7 @@ public class Ejercicio1 {
 			flujoDeNavegación(teclado);
 			} catch (Exception e) {
 				// Este error se puede dar cuando en el fichero no hay líneas válidas
+				// Se entiende como línea válida: "<=" o "url,unEntero"
 				System.out.print("Error inesperado "+ e.getMessage());
 			}
 	}
@@ -78,8 +79,6 @@ public class Ejercicio1 {
 		 * partes descritas se encuentran en la misma línea separadas por una coma,
 		 * usamos split para dividirlas y almacenarlas en el vector.
 		 */
-
-		// Se entiende como línea válida: "<=" o "url,unEntero"
 		
 		if (teclado.hasNextLine()) {
 			
