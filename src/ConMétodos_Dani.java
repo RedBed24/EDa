@@ -1,9 +1,10 @@
+package Pilas;
 
 import java.util.Stack;
 import java.util.Scanner;
 import java.io.*;
 
-public class ConMétodos_Dani {
+public class NavegadorMétodos {
 	
 	public static void main(String args[])  {
 		
@@ -21,7 +22,7 @@ public class ConMétodos_Dani {
 	/***********************************
 	 * @name lecturaFichero
 	 * 
-	 * @authors Daniel Ayuso Del Campo, Javier Cuartero Corredor y Samuel Espejo Gil
+	 * @authors DJS - 03
 	 * 
 	 * @description Lee el fichero y lo devuelve.
 	 * 
@@ -44,7 +45,7 @@ public class ConMétodos_Dani {
 	/***********************************
 	 * @name flujoDeNavegación
 	 * 
-	 * @authors Daniel Ayuso Del Campo, Javier Cuartero Corredor y Samuel Espejo Gil
+	 * @authors DJS - 03
 	 * 
 	 * @description Usa una pila para albergar el flujo de las páginas y, en cada paso, visualiza por el navegador la página actual.
 	 * 
@@ -86,7 +87,7 @@ public class ConMétodos_Dani {
 	/*********************************
 	 * @method mostrarEstadísticas
 	 * 
-	 * @authors Daniel Ayuso Del Campo, Javier Cuartero Corredor y Samuel Espejo Gil
+	 * @authors DJS - 03
 	 * 
 	 * @description Muestra la información relativa a los parámetros que se le envía.
 	 * 
@@ -99,8 +100,7 @@ public class ConMétodos_Dani {
 	public static void mostrarEstadísticas(int tiempoTotal, int páginasVisitadas, int páginasDistintas, int vueltasAtrás) {
 		System.out.println("\nEl tiempo total navegando en la página web de la UCLM ha sido de "+tiempoTotal+" segundos.");
 		System.out.println("Se visitaron en total "+páginasVisitadas+" páginas: "+páginasDistintas+" distintas y "+vueltasAtrás+" veces se regresó a la página anterior.");
-		System.out.println("El tiempo medio de permanencia en una página fue aproximadamente de "+ Math.round((double)tiempoTotal/páginasVisitadas)+" segundos.");
+		System.out.printf("El tiempo medio de permanencia en una página fue aproximadamente %.3f de segundos.",((double)tiempoTotal/páginasVisitadas));
 	}
 
 }
-
