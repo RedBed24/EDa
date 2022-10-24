@@ -1,0 +1,3 @@
+05724460J;Traumatology;Mild
+07293183M;Cardiology;Severe
+05747232S;Neurology;Vital
