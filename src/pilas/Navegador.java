@@ -1,4 +1,4 @@
-package pilas;
+package Pilas;
 
 import java.util.Stack;
 import java.util.Scanner;
@@ -6,46 +6,41 @@ import java.io.*;
 
 public class Navegador {
 
+	/***********************************
+	 * @name main
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description Lee el fichero e intenta ejecutar la simulación del flujo de navegación.
+	 * 
+	 * @files "navegacion.txt"
+	 * 
+	 * @throws FileNotFoundException --> Lanzada cuando no se ha podido leer el fichero correctamente.
+	 ***********************************/
+	
 	public static void main(String args[]) {
 
 		// Bienvenida
 		System.out.println("\n*******************************\n* ESTRUCTURA DE DATOS - PILAS *\n*******************************");
-
-		// Lectura del fichero navegacion.txt
-		Scanner teclado = lecturaFichero();
-
-		// Flujo de navegación y muestra de las estadísticas
-		if (teclado != null)
-			try {
-			flujoDeNavegación(teclado);
-			} catch (Exception e) {
-				/* Se lanza la excepción cuando en el fichero no hay líneas válidas.
-				 * Se entiende por línea válida: "<=" o "url,unEntero" */
-				System.out.print("Error inesperado: "+ e.getMessage());
-			}
-	}
-
-	/***********************************
-	 * @name lecturaFichero
-	 * 
-	 * @authors DJS - B2 - 03
-	 * 
-	 * @description Lee el fichero y lo devuelve.
-	 * 
-	 * @return teclado --> Devuelve el fichero si se leyó correctamente. Si no, devuelve null.
-	 * 
-	 * @exception FileNotFoundException se lanza cuando no se ha encontrado el fichero.
-	 ***********************************/
-
-	public static Scanner lecturaFichero() {
-		Scanner teclado = null;
+		
 		try {
-			File fichero = new File("navegacion.txt");
-			teclado = new Scanner(fichero);
+				
+		// Lectura del fichero navegacion.txt
+			File f = new File("navegacion.txt");
+			Scanner fichero = new Scanner(f);
+				
+		// Flujo de navegación y muestra de las estadísticas
+			flujoDeNavegación(fichero);
+			fichero.close();
+				
 		} catch (FileNotFoundException e) {
 			System.out.println("\nEl fichero no se ha encontrado.\n" + e.toString());
+			
+		} catch (Exception e) {
+			/* Se lanza la excepción cuando en el fichero no hay líneas válidas.
+			 * Se entiende por línea válida: "<=" o "url,unEntero" */
+			System.out.print("Error inesperado: "+ e.getMessage());
 		}
-		return teclado;
 	}
 
 	/***********************************
