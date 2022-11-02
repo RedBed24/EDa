@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import Colas.InvalidPatientInfoException;
-
 public class Principal implements Constantes {
 	
 	/***********************************
@@ -40,9 +38,9 @@ public class Principal implements Constantes {
 		// Lectura del fichero pacientes.txt
 			File f = new File("pacientes.txt");
 			Scanner fichero = new Scanner(f);
-				
 		// Simulación del hospital
 			System.out.println(simular(fichero));
+		// Cierre del fichero
 			fichero.close();
 			
 		} catch (FileNotFoundException e) {
@@ -58,48 +56,37 @@ public class Principal implements Constantes {
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description Simula el paso del tiempo teniendo en cuenta los días, la llegada de los 
-	 * 				pacientes cada tick y el tratamiento de los mismos en el hospital.
+	 * @description Simula la llegada de los pacientes cada tick y el tratamiento de los mismos en el hospital.
 	 *  
 	 * @param fichero --> Scanner abierto con los datos de los pacientes que deberían llegar.
 	 * 
-	 * @return String con la información resultante de la simulación. Esto es, las 3 colas del registro del hospital.
+	 * @return String con la información resultante de la simulación.
 	 ***********************************/
 	
 	public static String simular(Scanner fichero) {
 		
 		// Variable usada para tener en cuenta la hora del día en segundos.
-		long horaDelDía = 0;
-		
+		long tiempo = 0;
 		// Creación del objeto Hospital sobre el que se va a realizar la simulación
 		final Hospital hospital= new Hospital();
 		
 		// Ejecución de la simulación mientras siga habiendo pacientes sin tratar en el hospital.
-		do {
+		while(fichero.hasNextLine())
 			try {
-				if (fichero.hasNextLine()) 
-					hospital.triage(fichero.nextLine());
-			
+				// Creación del paciente
+				Paciente paciente = hospital.triage(fichero.nextLine(), tiempo);
+				// Adición del paciente creado
+				hospital.añadirPaciente(paciente);
+				// Manejo del tiempo
+				tiempo += tick;
+
 			} catch (InvalidPatientInfoException e) {
-				System.out.println(String.format("La informacion del paciente %s llegado a la hora: %02d:%02d:%02d no es la esperada.", e.getMessage(), (horaDelDía/hora)%24, (horaDelDía/minuto)%60, horaDelDía%60));
+				System.out.println(String.format("La información del paciente %s llegada a la hora: %02d:%02d:%02d no es la esperada. (t = %2d)", e.getMessage(), (tiempo/hora)%24, (tiempo/minuto)%60, tiempo%60, tiempo));
 				
 			} catch (IndexOutOfBoundsException e) {
-				System.out.println(String.format("La informacion del paciente llegado a la hora: %02d:%02d:%02d no es suficiente.", (horaDelDía/hora)%24, (horaDelDía/minuto)%60, horaDelDía%60));
+				System.out.println(String.format("La información del paciente llegada a la hora: %02d:%02d:%02d no es suficiente. (t = %2d)", (tiempo/hora)%24, (tiempo/minuto)%60, tiempo%60, tiempo));
 			}
-			
-			/* Tratamiento de un paciente durante el tiempo transcurrido en este tick con la correspondiente hora del día.
-			 * Aquí es donde "pasa" el tiempo. */
-			hospital.tratar(horaDelDía, tick);
-			
-			// Manejo de la hora del día
-			if (horaDelDía<dia)
-				horaDelDía += tick; // No ha pasado un día, por lo que se añade el tiempo transcurrido.
-			else
-				horaDelDía = tick; // Se resetea el día, inicializando la hora del día a tick ya que ese tiempo ya ha transcurrido.
 
-		} while(!hospital.isEmpty());
-		
-		// Devuelve la información de los registros del hospital.
 		return "\n"+hospital;
 	}
 

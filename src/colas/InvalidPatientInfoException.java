@@ -1,4 +1,3 @@
-package Colas;
 
 /*********************************************************************
 * @name InvalidPatientInfoException
@@ -7,6 +6,8 @@ package Colas;
 * 
 * @description Excepción lanzada cuando la información de los pacientes no es correcta.
 ***********************************************************************/
+package Colas;
+
 @SuppressWarnings("serial")
 public class InvalidPatientInfoException extends Exception {
 
