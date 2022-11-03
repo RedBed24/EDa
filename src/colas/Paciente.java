@@ -4,12 +4,11 @@
 * 
 * @authors DJS - B2 - 03
 * 
-* @description Contiene la información acerca de los pacientes, tanto sus características como los atributos que las manejan.
+* @description Contiene la información acerca de los pacientes, tanto sus características como los métodos que las manejan.
 ***********************************************************************/
 
 package Colas;
 
-import Colas.Paciente;
 
 public class Paciente implements Comparable<Paciente>, Constantes {
 	
@@ -69,7 +68,11 @@ public class Paciente implements Comparable<Paciente>, Constantes {
 	public int compareTo(final Paciente other) {
 		
 		// Si tenemos la misma emergencia, el otro paciente de la cola tiene prioridad sobre mí por haber llegado antes.
-		if (severity == other.getSeverity()) return 1;
+		if (severity == other.getSeverity())
+			if(horaLlegada > other.getHoraLlegada())
+				return 1;
+			else
+				return -1;
 		
 		// Si mi urgencia es baja, el otro paciente tiene prioridad, ya que su prioridad será o SEVERE o VITAL.
 		if (severity == Severity.MILD) return 1;

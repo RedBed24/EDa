@@ -51,12 +51,19 @@ public class Hospital implements Constantes {
 	 * @description Dado un paciente correctamente creado, lo añade a la cola que deba atendiendo a su especialidad.
 	 * 
 	 * @param paciente --> Paciente que se añadirá a una cola determinada.
+	 * 
+	 * @throws IllegalStateException --> Como la cola de traumatología se implementa con memoria estática, puede ocurrir que
+	 * 									 ya esté llena y, por tanto, el paciente no pueda ser añadido a la cola.
 	 ***********************************/
 	public void añadirPaciente(final Paciente paciente) {
-		switch (paciente.getSpeciality()) {
-			case TRAUMATOLOGY: traumatología.add(paciente); break;
-			case CARDIOLOGY:   cardiología.add(paciente);   break;
-			case NEUROLOGY:    neurología.add(paciente);    break;
+		try {
+			switch (paciente.getSpeciality()) {
+				case TRAUMATOLOGY: traumatología.add(paciente); break;
+				case CARDIOLOGY:   cardiología.add(paciente);   break;
+				case NEUROLOGY:    neurología.add(paciente);    break;
+			}
+		} catch(IllegalStateException e) {
+			System.out.println("La cola de traumatología está llena. El paciente " + paciente + " no puede pasar.");
 		}
 	}
 	
