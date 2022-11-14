@@ -4,15 +4,15 @@
 * 
 * @authors DJS - B2 - 03
 * 
-* @description Contiene la informaci√≥n acerca de los pacientes, tanto sus caracter√≠sticas como los m√©todos que las manejan.
+* @description Contiene la informaciÛn acerca de los pacientes, tanto sus caracterÌsticas como los mÈtodos que las manejan.
 ***********************************************************************/
 
-package Colas;
+package B2_03_colas;
 
 
 public class Paciente implements Comparable<Paciente>, Constantes {
 	
-	// Enumeraciones para poder usar valores entendibles en vez de n√∫meros. 
+	// Enumeraciones para poder usar valores entendibles en vez de n˙meros. 
 	public enum Severity {MILD, SEVERE, VITAL}; 
 	public enum Speciality {TRAUMATOLOGY, CARDIOLOGY, NEUROLOGY};
 	
@@ -58,7 +58,7 @@ public class Paciente implements Comparable<Paciente>, Constantes {
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description Indica qu√© paciente tiene prioridad respecto a otro atendiendo a la urgencia de su enfermedad.
+	 * @description Indica quÈ paciente tiene prioridad respecto a otro atendiendo a la urgencia de su enfermedad.
 	 * 
 	 * @param other --> Paciente con el que se compara
 	 * 
@@ -67,16 +67,16 @@ public class Paciente implements Comparable<Paciente>, Constantes {
 	 ***********************************/
 	public int compareTo(final Paciente other) {
 		
-		// Si tenemos la misma emergencia, el otro paciente de la cola tiene prioridad sobre m√≠ por haber llegado antes.
+		// Si tenemos la misma emergencia, el otro paciente de la cola tiene prioridad sobre mÌ por haber llegado antes.
 		if (severity == other.getSeverity())
 			if(horaLlegada > other.getHoraLlegada())
 				return 1;
 			else
 				return -1;
 		
-		// Si mi urgencia es baja, el otro paciente tiene prioridad, ya que su prioridad ser√° o SEVERE o VITAL.
+		// Si mi urgencia es baja, el otro paciente tiene prioridad, ya que su prioridad ser· o SEVERE o VITAL.
 		if (severity == Severity.MILD) return 1;
-		// Si mi urgencia es alta, yo tengo prioridad, ya que la prioridad del otro paciente ser√° o SEVERE O MILD. 
+		// Si mi urgencia es alta, yo tengo prioridad, ya que la prioridad del otro paciente ser· o SEVERE O MILD. 
 		if (severity == Severity.VITAL) return -1;
 		// Si mi urgencia es media...
 		if (severity == Severity.SEVERE)
@@ -95,7 +95,7 @@ public class Paciente implements Comparable<Paciente>, Constantes {
 	 * @description Devuelve el DNI, la gravedad, el tiempo de llegada en segundos y
 	 * 				el tiempo de llegada en formato de horas.
 	 * 
-	 * @return String con toda la informaci√≥n del paciente
+	 * @return String con toda la informaciÛn del paciente
 	 ***********************************/
 	public String toString() {
 		return String.format("| %s |  %-6s  |   %-5d   |  %02d:%02d:%02d  |", dni, severity, horaLlegada, horaLlegada/hora, (horaLlegada/minuto)%60, horaLlegada%60);
