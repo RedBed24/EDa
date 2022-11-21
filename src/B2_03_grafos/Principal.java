@@ -1,20 +1,23 @@
 package B2_03_grafos;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 import B2_03_grafos.Personaje.*;
 
+import graphsDSESIUCLM.*;
+
 public class Principal {
 
-	public static List<Personaje> leerFichero(final Scanner fichero) throws IllegalArgumentException, NumberFormatException {
-		List<Personaje> devolver= new LinkedList<Personaje>();
+	public static List<DecoratedElement<Personaje>> leerPersonajes(final Scanner fichero) throws IllegalArgumentException, NumberFormatException {
+		final List<DecoratedElement<Personaje>> devolver= new LinkedList<DecoratedElement<Personaje>>();
 		
 		fichero.nextLine();
 		
 		while (fichero.hasNext()) {
-			String[] data= fichero.nextLine().split(";");
+			final String[] data= fichero.nextLine().split(";");
 			/* 
 			 * data[0] id
 			 * data[1] type
@@ -48,15 +51,29 @@ public class Principal {
 			
 			final int freqsum= Integer.parseInt(data[5]);
 			
-			devolver.add(new Personaje(id, type, subtype, name, gender, freqsum));
+			final Personaje personaje= new Personaje(type, subtype, name, gender, freqsum);
+			
+			final DecoratedElement<Personaje> decorated= new DecoratedElement<>(id, personaje);
+
+			devolver.add(decorated);
 		}
 		
 		return devolver;
 	}
 	
+	public static Graph<V, E> leerRelaciones(final Scanner fichero, List<DecoratedElement<Personaje>> l) {
+		return null;
+	}
+	
 	public static void main(String[] args) {
-		
-
+		try { 
+			File f= new File("lotr-pers.csv");
+			Scanner fichero= new Scanner(f);
+			
+			System.out.println(leerPersonajes(fichero));
+		} catch (Exception e){
+			System.err.println("Error inesperado.");
+		}
 	}
 
 }

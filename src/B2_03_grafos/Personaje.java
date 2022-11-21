@@ -5,16 +5,14 @@ public class Personaje {
 	public enum SubType { PLA, MEN, ELVES, DWARFS, HOBBIT, ANIMAL, MIXED, ENTS, AINUR, ORCS, THING; };
 	public enum Gender { MALE, FEMALE, UKNOWN; };
 	
-	final private String id;
 	final private Type type;
 	final private String subtype;
 	final private String name;
 	final private Gender gender;
 	final private int FreqSum;
 	
-	public Personaje(String id, Type type, String subtype, String name, Gender gender, int freqSum) {
+	public Personaje(Type type, String subtype, String name, Gender gender, int freqSum) {
 		super();
-		this.id = id;
 		this.type = type;
 		this.subtype = subtype;
 		this.name = name;
