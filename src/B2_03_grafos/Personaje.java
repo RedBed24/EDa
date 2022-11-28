@@ -32,6 +32,15 @@ public class Personaje {
 		return FreqSum;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return name.equals(((Personaje)obj).getName()) && type== ((Personaje)obj).getType();
+	}
+
 	@Override
 	public String toString() {
 		return "Personaje [type=" + type + ", subtype=" + subtype + ", name=" + name + ", gender=" + gender + "]";

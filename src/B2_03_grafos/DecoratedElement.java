@@ -2,7 +2,7 @@ package B2_03_grafos;
 
 import graphsDSESIUCLM.*;
 
-public class DecoratedElement<T> implements Element {
+public class DecoratedElement<T> implements Element, Vertex<T>{
 
   private String ID;                 //Vertex ID
   private T element;                 //Data Element
@@ -48,7 +48,7 @@ public class DecoratedElement<T> implements Element {
    * IMPORTANT: element needs to override equals()
   */
   public boolean equals(Object n) {
-    return (ID.equals(((DecoratedElement) n).getID())
+    return (ID.equals(((DecoratedElement<T>) n).getID())
        && element.equals(((DecoratedElement<T>) n).getElement()));
   }
   public String toString() {
