@@ -1,3 +1,6 @@
+package B2_03_grafos;
+
+import graphsDSESIUCLM.*;
 
 /*********************************************************************
 * @name DecoratedElement
@@ -7,11 +10,6 @@
 * @description Útil para decorar o recoger el conjunto de atributos técnicos relacionados con 
 * 			   la manipulación y recorrido de grafos.
 ***********************************************************************/
-
-package B2_03_grafos;
-
-import graphsDSESIUCLM.*;
-
 public class DecoratedElement<T> implements Element {
 
   private String ID; //Vertex ID

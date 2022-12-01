@@ -1,3 +1,4 @@
+package B2_03_grafos;
 
 /*********************************************************************
 * @name Personaje
@@ -8,8 +9,6 @@
 * 			   Los atributos son tipo, subtipo, nombre, género y referencias al personaje en la saga de establecimiento.
 * 			   Los métodos son el constructor, toString y algunos getters.
 ***********************************************************************/
-package B2_03_grafos;
-
 public class Personaje {
 	
 	public enum Type { PLA, PER, GRO, THIN; }; // Enumerado con los distintos tipos de personajes

@@ -1,3 +1,15 @@
+package B2_03_grafos;
+ 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.InputMismatchException;
+import java.util.Iterator;
+import java.util.Scanner;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
+
+import B2_03_grafos.Personaje.*;
+import graphsDSESIUCLM.*;
 
 /*********************************************************************
 * @name Principal
@@ -7,17 +19,6 @@
 * @description Contiene la función main, que contiene la lectura de los ficheros de personajes y de relaciones,
 * 			   la creación del grafo y el manejo del programa principal a través de un menú.
 ***********************************************************************/
-package B2_03_grafos;
- 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.InputMismatchException;
-import java.util.Iterator;
-import java.util.Scanner;
-
-import B2_03_grafos.Personaje.*;
-import graphsDSESIUCLM.*;
-
 public class Principal {
 
 	final static Scanner TECLADO = new Scanner(System.in);
