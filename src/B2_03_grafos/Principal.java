@@ -105,6 +105,52 @@ public class Principal {
 		return graph;
 	}
 	
+	public static String buscarPersonajeMayorInteracción(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
+		Personaje personajeMasRelaciones= null;
+		int mayorRelaciones= 0;
+		
+		Iterator<Vertex<DecoratedElement<Personaje>>> nodos= graph.getVertices();
+		while (nodos.hasNext()) {
+			Vertex<DecoratedElement<Personaje>> nodoActual= nodos.next();
+			
+			int cuenta= 0; // contar las aristas (relaciones) que tiene un nodo (personaje)
+			Iterator<Edge<DecoratedElement<Integer>>> aristas= graph.incidentEdges(nodoActual);
+			while (aristas.hasNext()) {
+				aristas.next();
+				cuenta++;
+			}
+			
+			// obtener la cuenta mayor
+			if (mayorRelaciones< cuenta) {
+				mayorRelaciones= cuenta;
+				personajeMasRelaciones= nodoActual.getElement().getElement();
+			}
+		}
+		return personajeMasRelaciones+ " tiene "+ mayorRelaciones+ " relaciones.";
+	}
+	
+	public static String relaciónConMásInteractuación (final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
+		Personaje personaje1= null, personaje2= null;
+		int mayorRelaciones= 0;
+
+		Iterator<Edge<DecoratedElement<Integer>>> aristas= graph.getEdges();
+		while (aristas.hasNext()) {
+			Edge<DecoratedElement<Integer>> aristaActual= aristas.next();
+
+			if (mayorRelaciones< aristaActual.getElement().getElement()) {
+				// actualizamos el número mayor de relaciones
+				mayorRelaciones= aristaActual.getElement().getElement();
+				// obtenemos los vértices de la arista
+				Vertex<DecoratedElement<Personaje>> personajes[]= graph.endVertices(aristaActual);
+				// sacamos los personajes de los vértices
+				personaje1= personajes[0].getElement().getElement();
+				personaje2= personajes[1].getElement().getElement();
+			}
+		}
+		
+		return personaje1+ " y "+personaje2+ " mantienen "+ mayorRelaciones+ " relaciones.";
+	}
+
 	public static void main(String[] args) {
 		try { 
 			File f= new File("lotr-pers.csv");
@@ -117,9 +163,15 @@ public class Principal {
 			
 			grafo= leerRelaciones(fichero, grafo);
 			
+			// apartado a
 			System.out.println("Cantidad de personajes en grafo: "+ grafo.getN());
 			System.out.println("Cantidad de relaciones: "+ grafo.getM());
+			System.out.println("Personaje con más cantidad de relaciones: "+ buscarPersonajeMayorInteracción(grafo));
+			System.out.println("Personajes que mantienen más relaciones: "+ relaciónConMásInteractuación(grafo));
 			
+			// apartado b
+			
+			// apartado c
 		} catch (FileNotFoundException e) {
 			System.err.println("No se ha encontrado alguno de los archivos.");
 		} catch (Exception e){
