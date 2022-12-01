@@ -6,8 +6,6 @@ import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
-
 import B2_03_grafos.Personaje.*;
 import graphsDSESIUCLM.*;
 
