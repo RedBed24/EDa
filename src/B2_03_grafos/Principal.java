@@ -106,6 +106,7 @@ public class Principal {
 	}
 	
 	public static String buscarPersonajeMayorInteracción(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
+		// buscar el nodo con mayor grado
 		Personaje personajeMasRelaciones= null;
 		int mayorRelaciones= 0;
 		
@@ -130,6 +131,7 @@ public class Principal {
 	}
 	
 	public static String relaciónConMásInteractuación (final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
+		// buscar la arista con mayor peso
 		Personaje personaje1= null, personaje2= null;
 		int mayorRelaciones= 0;
 
@@ -149,6 +151,53 @@ public class Principal {
 		}
 		
 		return personaje1+ " y "+personaje2+ " mantienen "+ mayorRelaciones+ " relaciones.";
+	}
+	
+	public static void limpiarEtiquetas(final Graph<DecoratedElement<?>, DecoratedElement<?>> graph) {
+		Iterator<Vertex<DecoratedElement<?>>> vertices= graph.getVertices();
+		while (vertices.hasNext()) {
+			Vertex<DecoratedElement<?>> vertex= vertices.next();
+			vertex.getElement().setVisited(false);
+			vertex.getElement().setParent(null);
+			vertex.getElement().setDistance(0);
+		}
+
+		// uhm, igual lo suyo sería poner otro elemento decorado para las aristas, más que nada porque lo suyo sería que tuviera atributos diferentes xd
+		Iterator<Edge<DecoratedElement<?>>> edges= graph.getEdges();
+		while (edges.hasNext()) {
+			Edge<DecoratedElement<?>> edge= edges.next();
+			edge.getElement().setVisited(false);
+			edge.getElement().setParent(null);
+			edge.getElement().setDistance(0);
+		}
+		
+	}
+
+	/* es literalmente copiapega
+	 * 
+	 */
+	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Integer>> end) {
+		/* if (end.equals(start))
+			return start;
+		*/
+		
+		start.getElement().setVisited(true);
+
+		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.incidentEdges(start);
+		while (edges.hasNext()) {
+			Edge<DecoratedElement<Integer>> actualEdge= edges.next();
+			
+			if (!actualEdge.getElement().getVisited()) {
+				Vertex<DecoratedElement<Personaje>> nextVertex= graph.opposite(start, actualEdge);
+				if (!nextVertex.getElement().getVisited()) {
+					nextVertex.getElement().setParent(start.getElement());
+					actualEdge.getElement().setVisited(true);
+					DFS(graph, nextVertex, end);
+				} else {
+					//actualEdge.getElement().setType(DecoratedElement.Type.BACK);
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) {
@@ -170,8 +219,16 @@ public class Principal {
 			System.out.println("Personajes que mantienen más relaciones: "+ relaciónConMásInteractuación(grafo));
 			
 			// apartado b
+			/* preguntarle al usuario dos nombres de personajes
+			 * Aplicar DFS para encontrar un camino cualquiera entre esos dos personajes, teniendo en cuenta que los nodos siguientes deben cumplir una condicion:
+			 * (!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80
+			 */
 			
 			// apartado c
+			/* preguntarle al usuario otros dos nombres
+			 * Apllicar BFS para encontrar el camino mas corto (lo cual ya cumple el BFS) entre los dos personajes, los cuales tienen que cumplir:
+			 * personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
+			 */
 		} catch (FileNotFoundException e) {
 			System.err.println("No se ha encontrado alguno de los archivos.");
 		} catch (Exception e){
