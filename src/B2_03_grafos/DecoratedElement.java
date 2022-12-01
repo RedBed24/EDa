@@ -2,7 +2,7 @@ package B2_03_grafos;
 
 import graphsDSESIUCLM.*;
 
-public class DecoratedElement<T> implements Element, Vertex<T>{
+public class DecoratedElement<T> implements Element {
 
   private String ID;                 //Vertex ID
   private T element;                 //Data Element

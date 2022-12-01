@@ -1,9 +1,8 @@
 package B2_03_grafos;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 import B2_03_grafos.Personaje.*;
@@ -91,6 +90,7 @@ public class Principal {
 						source= vertice;
 					else if (data[1].equalsIgnoreCase(vertice.getElement().getID()))
 						target= vertice;
+					if (source!= null && target!= null) break;
 				}
 
 				graph.insertEdge(source, target, new DecoratedElement<Integer>(source.getElement().getID()+target.getElement().getID(), Integer.parseInt(data[2])));
@@ -99,9 +99,7 @@ public class Principal {
 				System.err.println("No se ha recibido la cantidad de información necesaria.");
 			} catch (NumberFormatException e) {
 				System.err.println("No se ha podido convertir a entero la entrada esperada.");
-			} catch (IllegalArgumentException e) {
-				System.err.println("Se ha recibido un dato erróneo: "+e);
-			}
+			} 
 		}
 		// realmente no es necesario ya que se pasa por referencia.
 		return graph;
@@ -121,6 +119,9 @@ public class Principal {
 			
 			System.out.println("Cantidad de personajes en grafo: "+ grafo.getN());
 			System.out.println("Cantidad de relaciones: "+ grafo.getM());
+			
+		} catch (FileNotFoundException e) {
+			System.err.println("No se ha encontrado alguno de los archivos.");
 		} catch (Exception e){
 			System.err.println("Error inesperado.");
 		}
