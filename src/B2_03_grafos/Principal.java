@@ -12,8 +12,8 @@ import graphsDSESIUCLM.*;
 
 public class Principal {
 
-	public static Graph<DecoratedElement<Personaje>, Integer> leerPersonajes(final Scanner fichero) {
-		final Graph<DecoratedElement<Personaje>, Integer> devolver= new TreeMapGraph<DecoratedElement<Personaje>, Integer>();
+	public static Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> leerPersonajes(final Scanner fichero) {
+		final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> devolver= new TreeMapGraph<DecoratedElement<Personaje>, DecoratedElement<Integer>>();
 		
 		fichero.nextLine();
 		
@@ -71,7 +71,7 @@ public class Principal {
 		return devolver;
 	}
 	
-	public static Graph<DecoratedElement<Personaje>, Integer> leerRelaciones(final Scanner fichero, Graph<DecoratedElement<Personaje>, Integer> graph) {
+	public static Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> leerRelaciones(final Scanner fichero, Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
 		fichero.nextLine();
 
 		while (fichero.hasNext()) {
@@ -92,11 +92,8 @@ public class Principal {
 					else if (data[1].equalsIgnoreCase(vertice.getElement().getID()))
 						target= vertice;
 				}
-				
-				System.out.println(graph.getM());
-				System.out.println(data[0] + " " +source.getElement().getID()+ " "+ data[1]+ " " +target.getElement().getID());
 
-				graph.insertEdge(source, target, Integer.parseInt(data[2]));
+				graph.insertEdge(source, target, new DecoratedElement<Integer>(source.getElement().getID()+target.getElement().getID(), Integer.parseInt(data[2])));
 
 			} catch (IndexOutOfBoundsException e) {
 				System.err.println("No se ha recibido la cantidad de información necesaria.");
@@ -106,6 +103,7 @@ public class Principal {
 				System.err.println("Se ha recibido un dato erróneo: "+e);
 			}
 		}
+		// realmente no es necesario ya que se pasa por referencia.
 		return graph;
 	}
 	
@@ -114,7 +112,7 @@ public class Principal {
 			File f= new File("lotr-pers.csv");
 			Scanner fichero= new Scanner(f);
 			
-			Graph<DecoratedElement<Personaje>, Integer> grafo= leerPersonajes(fichero);
+			Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo= leerPersonajes(fichero);
 			
 			f= new File("networks-id-3books.csv");
 			fichero= new Scanner(f);
