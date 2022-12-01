@@ -103,7 +103,8 @@ public class Principal {
 							
 					// Apartado b
 					case 2: 
-						/* preguntarle al usuario dos nombres de personajes
+						/* TODO:
+						 * preguntarle al usuario dos nombres de personajes
 						 * Aplicar DFS para encontrar un camino cualquiera entre esos dos personajes, teniendo en cuenta que los nodos siguientes deben cumplir una condicion:
 						 * (!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80
 						 */
@@ -111,8 +112,9 @@ public class Principal {
 					
 					// Apartado c
 					case 3:
-						/* preguntarle al usuario otros dos nombres
-						 * Apllicar BFS para encontrar el camino mas corto (lo cual ya cumple el BFS) entre los dos personajes, los cuales tienen que cumplir:
+						/* TODO:
+						 * preguntarle al usuario otros dos nombres
+						 * Aplicar BFS para encontrar el camino mas corto (lo cual ya cumple el BFS) entre los dos personajes, los cuales tienen que cumplir:
 						 * personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
 						 */
 						break;
@@ -355,6 +357,16 @@ public class Principal {
 		}
 		return "\n\t" + personaje1+ " y \n\t"+personaje2+ " mantienen "+ mayorRelaciones+ " relaciones.";
 	}
+
+	/***********************************
+	 * @name limpiarEtiquetas
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description Resetea las etiquetas (visitado, padre, distancia...) usadas para recorer el grafo. Permite la ejecución de otra búsqueda sin que la anterior afecte a esta
+	 * 
+	 * @param graph --> Grafo principal
+	 ***********************************/
 	
 	public static void limpiarEtiquetas(final Graph<DecoratedElement<?>, DecoratedElement<?>> graph) {
 		Iterator<Vertex<DecoratedElement<?>>> vertices= graph.getVertices();
@@ -376,11 +388,16 @@ public class Principal {
 		
 	}
 
-	/* es literalmente copiapega
-	 * 
+	/* TODO:
+	 * es literalmente copiapega
+	 * no está terminado, se usará en el apartado B
+	 * Aplicar DFS para encontrar un camino cualquiera entre esos dos personajes, teniendo en cuenta que los nodos siguientes deben cumplir una condicion:
+	 * (!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80
 	 */
 	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Integer>> end) {
-		/* if (end.equals(start))
+		/* TODO:
+		 * Revisar cómo se hacía para terminar el camino XD, mirar los ejemplos dados en el campus
+		 * if (end.equals(start))
 			return start;
 		*/
 		
@@ -392,6 +409,8 @@ public class Principal {
 			
 			if (!actualEdge.getElement().getVisited()) {
 				Vertex<DecoratedElement<Personaje>> nextVertex= graph.opposite(start, actualEdge);
+				
+				// además de comprobar si está visitado, se debe comprobar que cumpla las condiciones que se piden en el ejercicio
 				if (!nextVertex.getElement().getVisited()) {
 					nextVertex.getElement().setParent(start.getElement());
 					actualEdge.getElement().setVisited(true);
