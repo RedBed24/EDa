@@ -368,19 +368,19 @@ public class Principal {
 	 * @param graph --> Grafo principal
 	 ***********************************/
 	
-	public static void limpiarEtiquetas(final Graph<DecoratedElement<?>, DecoratedElement<?>> graph) {
-		Iterator<Vertex<DecoratedElement<?>>> vertices= graph.getVertices();
+	public static void limpiarEtiquetas(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
+		Iterator<Vertex<DecoratedElement<Personaje>>> vertices= graph.getVertices();
 		while (vertices.hasNext()) {
-			Vertex<DecoratedElement<?>> vertex= vertices.next();
+			Vertex<DecoratedElement<Personaje>> vertex= vertices.next();
 			vertex.getElement().setVisited(false);
 			vertex.getElement().setParent(null);
 			vertex.getElement().setDistance(0);
 		}
 
-		// uhm, igual lo suyo sería poner otro elemento decorado para las aristas, más que nada porque lo suyo sería que tuviera atributos diferentes xd
-		Iterator<Edge<DecoratedElement<?>>> edges= graph.getEdges();
+		// TODO: uhm, igual lo suyo sería poner otro elemento decorado para las aristas, más que nada porque lo suyo sería que tuviera atributos diferentes xd
+		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.getEdges();
 		while (edges.hasNext()) {
-			Edge<DecoratedElement<?>> edge= edges.next();
+			Edge<DecoratedElement<Integer>> edge= edges.next();
 			edge.getElement().setVisited(false);
 			edge.getElement().setParent(null);
 			edge.getElement().setDistance(0);
