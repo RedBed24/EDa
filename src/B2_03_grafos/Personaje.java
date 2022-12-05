@@ -48,7 +48,11 @@ public class Personaje {
 		return type;
 	}
 
-	public String getSubtype() {
+	public Gender getGender() {
+		return gender;
+	}
+
+	public String getSubType() {
 		return subtype;
 	}
 

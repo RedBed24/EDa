@@ -65,7 +65,8 @@ public class Principal {
 			System.err.println("\nUno de los ficheros no se ha encontrado.\n");
 			
 		} catch (Exception e){
-			System.err.println("Error inesperado.");
+			System.err.println("Error inesperado."+e.getMessage());
+			e.printStackTrace();
 			
 		}
 	}
@@ -83,6 +84,7 @@ public class Principal {
 	 ***********************************/
 	
 	public static void menú(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo) {
+		Vertex<DecoratedElement<Personaje>> source = null, target = null;
 		while (true) { // Mientras el usuario no especifique la opción 5, la cual tiene un return */
 			try {
 				// Muestra del menú
@@ -101,18 +103,19 @@ public class Principal {
 							
 					// Apartado b
 					case 2: 
-						/* TODO:
-						 * preguntarle al usuario dos nombres de personajes
-						 * Aplicar DFS para encontrar un camino cualquiera entre esos dos personajes, teniendo en cuenta que los nodos siguientes deben cumplir una condicion:
-						 * (!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80
-						 */
+						leerPersonajes(source, target, grafo);
+						DFS(grafo, source, target);
+						if (target.getElement().getParent()!= null) deshacerCamino(target);
+						else System.out.println("No existe un camino entre los personajes dados.");
 						break;
 					
 					// Apartado c
 					case 3:
+						leerPersonajes(source, target, grafo);
+						BFS(grafo, source, target);
+						if (target.getElement().getParent()!= null) deshacerCamino(target);
+						else System.out.println("No existe un camino entre los personajes dados.");
 						/* TODO:
-						 * preguntarle al usuario otros dos nombres
-						 * Aplicar BFS para encontrar el camino mas corto (lo cual ya cumple el BFS) entre los dos personajes, los cuales tienen que cumplir:
 						 * personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
 						 */
 						break;
@@ -125,13 +128,17 @@ public class Principal {
 				}
 				
 			} catch (InputMismatchException e) {
-				System.out.println("Error al introducir la selección del menú.");
+				System.err.println("Error al introducir la selección del menú.");
 				TECLADO.next(); // Se quita el valor erróneo del búffer
+			} catch (IllegalArgumentException e) {
+				System.err.println(e);
 			}
 		}
 
 	}
 	
+
+
 	/***********************************
 	 * @name leerPersonajes
 	 * 
@@ -386,38 +393,63 @@ public class Principal {
 		
 	}
 
-	/* TODO:
-	 * es literalmente copiapega
-	 * no está terminado, se usará en el apartado B
-	 * Aplicar DFS para encontrar un camino cualquiera entre esos dos personajes, teniendo en cuenta que los nodos siguientes deben cumplir una condicion:
-	 * (!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80
-	 */
-	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Integer>> end) {
-		/* TODO:
-		 * Revisar cómo se hacía para terminar el camino XD, mirar los ejemplos dados en el campus
-		 * if (end.equals(start))
-			return start;
-		*/
-		
+	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Personaje>> end) {
+		System.out.println(start.getElement().getElement().getName());
 		start.getElement().setVisited(true);
 
 		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.incidentEdges(start);
 		while (edges.hasNext()) {
 			Edge<DecoratedElement<Integer>> actualEdge= edges.next();
-			
-			if (!actualEdge.getElement().getVisited()) {
-				Vertex<DecoratedElement<Personaje>> nextVertex= graph.opposite(start, actualEdge);
+			Vertex<DecoratedElement<Personaje>> nextVertex= graph.opposite(start, actualEdge);
 				
-				// además de comprobar si está visitado, se debe comprobar que cumpla las condiciones que se piden en el ejercicio
-				if (!nextVertex.getElement().getVisited()) {
+			if (!nextVertex.getElement().getVisited()) {
+				Personaje personajeCandidato= nextVertex.getElement().getElement();
+
+				if (nextVertex.getElement().equals(end.getElement())) {
 					nextVertex.getElement().setParent(start.getElement());
-					actualEdge.getElement().setVisited(true);
+					return ;
+				}
+				if ((!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80) {
+					nextVertex.getElement().setParent(start.getElement());
 					DFS(graph, nextVertex, end);
-				} else {
-					//actualEdge.getElement().setType(DecoratedElement.Type.BACK);
 				}
 			}
 		}
 	}
 
+	private static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
+		// TODO: copiar y pegar adaptando
+		// personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
+	}
+
+	public static void deshacerCamino(Vertex<DecoratedElement<Personaje>> target) {
+		// TODO: copiar y pegar adaptando
+		System.out.println(target.getElement().getParent().getElement().getName());
+		System.out.println(target.getElement().getElement().getName());
+	}
+	
+	public static void leerPersonajes(Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target,final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo) {
+		// TODO debemos devolver de alguna forma los elementos, ya sea por un return o con una lista o lo que sea
+		TECLADO.nextLine();
+		System.out.print("Introduce el 1er personaje: ");
+		final String p1= TECLADO.nextLine();
+		System.out.print("Introduce el 2do personaje: ");
+		final String p2= TECLADO.nextLine();
+		
+		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = grafo.getVertices(); 
+		
+		// Recorremos todos los vértices mediante el Iterator correspondiente hasta que coincidan con el leído en el fichero
+		while (vertices.hasNext()) { 
+			Vertex<DecoratedElement<Personaje>> vertice = vertices.next();
+			
+			if (p1.equalsIgnoreCase(vertice.getElement().getElement().getName()))
+				source = vertice;
+			else if (p2.equalsIgnoreCase(vertice.getElement().getElement().getName()))
+				target = vertice;
+			
+			if (source != null && target != null) break; // Si los ha encontrado sale del bucle. Tenemos la arista acotada por sus vértices.
+		}
+		
+		if (source== null || target== null) throw new IllegalArgumentException("No existe alguno de los nodos indicados.");
+	}
 }
