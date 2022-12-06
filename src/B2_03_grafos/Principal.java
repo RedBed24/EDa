@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.InputMismatchException;
 import java.util.Iterator;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingQueue;
 
+import B2_03_colas.Paciente;
 import B2_03_grafos.Personaje.*;
 import graphsDSESIUCLM.*;
 
@@ -85,6 +88,7 @@ public class Principal {
 	
 	public static void menú(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo) {
 		Vertex<DecoratedElement<Personaje>> source = null, target = null;
+		Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes = new LinkedBlockingQueue<Vertex<DecoratedElement<Personaje>>>();
 		while (true) { // Mientras el usuario no especifique la opción 5, la cual tiene un return */
 			try {
 				// Muestra del menú
@@ -103,15 +107,20 @@ public class Principal {
 							
 					// Apartado b
 					case 2: 
-						leerPersonajes(source, target, grafo);
+						limpiarEtiquetas(grafo);
+						pedirPersonajes(source, target, grafo, colaPersonajes);
+						source = colaPersonajes.remove();
+						target = colaPersonajes.remove();
 						DFS(grafo, source, target);
-						if (target.getElement().getParent()!= null) deshacerCamino(target);
-						else System.out.println("No existe un camino entre los personajes dados.");
+						System.out.println("Personaje de "+ target.getElement().getElement().getName()); // Imprimir el último
+						if (target.getElement().getParent() == null) System.out.println("No existe un camino entre los personajes dados.");
 						break;
 					
 					// Apartado c
 					case 3:
-						leerPersonajes(source, target, grafo);
+						pedirPersonajes(source, target, grafo, colaPersonajes);
+						source = colaPersonajes.remove();
+						target = colaPersonajes.remove();
 						BFS(grafo, source, target);
 						if (target.getElement().getParent()!= null) deshacerCamino(target);
 						else System.out.println("No existe un camino entre los personajes dados.");
@@ -136,8 +145,6 @@ public class Principal {
 		}
 
 	}
-	
-
 
 	/***********************************
 	 * @name leerPersonajes
@@ -362,6 +369,68 @@ public class Principal {
 		}
 		return "\n\t" + personaje1+ " y \n\t"+personaje2+ " mantienen "+ mayorRelaciones+ " relaciones.";
 	}
+	
+
+	/***********************************
+	 * @name pedirPersonajes
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description 
+	 * 
+	 * @param source --> 
+	 * @param target -->
+	 * @param graph --> Grafo principal
+	 * @param colaPersonajes --> 
+	 * 
+	 * @throws
+	 * 
+	 * @return Una cadena que indica la pareja y su cantidad de relaciones.
+	 ***********************************/
+	
+	public static void pedirPersonajes(Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target, 
+			final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes) {
+		/* TODO: No terminado. He trabajado en diversas cosas. 
+		 * 
+		 * He trabajado en pedirPersonajes y he hechos diversas pruebas con el algoritmo DFS. He añadido una
+		 * cola para guardar los personajes. Básicamente, los vamos a sacar en orden FIFO entonces una lista o una cola me es indiferente.
+		 * Como no creo que dé problemas una cola (por el hecho de que siempre se quita el primero que se metió) la dejamos. Si se presentan
+		 * problemas o si pensáis que es mejor una lista, lo cambiamos.
+		 * 
+		 * También otra cosa a comentar:
+		 * Si os fijáis en la diapositiva de la que Samu hizo copia y pega del DFS pone "Previsit. Optional: Do something with the node"
+		 * y en otro lado "Postvisit. Optional: Do something with the node". Esto me da que pensar:
+		 * 
+		 * Dice que ahí se harían diversas operaciones con el nodo, si es necesario. Entonces, podemos deshacer el camino ahí, ¿no?
+		 * Sin embargo, he ido haciendo pruebas y el previsit funciona (aunque no sé si imprime en el orden correcto), pero el 
+		 * postvisit da problemas. Poquito más por hoy.*/
+		//
+		TECLADO.nextLine();
+		//
+		System.out.print("Introduce el primer personaje: ");
+		final String p1 = TECLADO.nextLine();
+		System.out.print("Introduce el segundo personaje: ");
+		final String p2 = TECLADO.nextLine();
+		//
+		if(p1.equalsIgnoreCase(p2)) throw new IllegalArgumentException("Has indicado el mismo personaje. Debes indicar personajes distintos.");
+		//
+		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = grafo.getVertices(); 
+		// Recorremos todos los vértices mediante el Iterator correspondiente hasta que coincidan con el leído en el fichero
+		while (vertices.hasNext()) { 
+			Vertex<DecoratedElement<Personaje>> vertice = vertices.next();
+			
+			if (p1.equalsIgnoreCase(vertice.getElement().getElement().getName()))
+				source = vertice;
+			else if (p2.equalsIgnoreCase(vertice.getElement().getElement().getName()))
+				target = vertice;
+			
+			if (source != null && target != null) break; // Si los ha encontrado sale del bucle. Tenemos la arista acotada por sus vértices.
+		}
+		
+		//
+		if (source == null || target == null) throw new IllegalArgumentException("Uno de los nombres indicados no existe.");
+		else { colaPersonajes.add(source); colaPersonajes.add(target); }
+	}
 
 	/***********************************
 	 * @name limpiarEtiquetas
@@ -376,7 +445,7 @@ public class Principal {
 	public static void limpiarEtiquetas(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
 		Iterator<Vertex<DecoratedElement<Personaje>>> vertices= graph.getVertices();
 		while (vertices.hasNext()) {
-			Vertex<DecoratedElement<Personaje>> vertex= vertices.next();
+			Vertex<DecoratedElement<Personaje>> vertex = vertices.next();
 			vertex.getElement().setVisited(false);
 			vertex.getElement().setParent(null);
 			vertex.getElement().setDistance(0);
@@ -394,27 +463,34 @@ public class Principal {
 	}
 
 	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Personaje>> end) {
-		System.out.println(start.getElement().getElement().getName());
+		
+		//Previsit
+		System.out.println("Personaje de " + start.getElement().getElement().getName());
 		start.getElement().setVisited(true);
-
 		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.incidentEdges(start);
+		
 		while (edges.hasNext()) {
-			Edge<DecoratedElement<Integer>> actualEdge= edges.next();
-			Vertex<DecoratedElement<Personaje>> nextVertex= graph.opposite(start, actualEdge);
-				
-			if (!nextVertex.getElement().getVisited()) {
-				Personaje personajeCandidato= nextVertex.getElement().getElement();
+			Edge<DecoratedElement<Integer>> actualEdge = edges.next();
+			Vertex<DecoratedElement<Personaje>> nextVertex = graph.opposite(start, actualEdge);
 
+			if (!nextVertex.getElement().getVisited()) {
+				Personaje personajeCandidato = nextVertex.getElement().getElement();
+				
 				if (nextVertex.getElement().equals(end.getElement())) {
 					nextVertex.getElement().setParent(start.getElement());
-					return ;
+					return;
 				}
-				if ((!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender()!= Gender.MALE) && personajeCandidato.getFreqSum()>= 80) {
+				if ((!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender() != Gender.MALE) && personajeCandidato.getFreqSum() >= 80) {
 					nextVertex.getElement().setParent(start.getElement());
 					DFS(graph, nextVertex, end);
 				}
 			}
+			
 		}
+		//Postvisit
+		//System.out.println("Personaje de " + start.getElement().getElement().getName());
+		
+		 
 	}
 
 	private static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
@@ -428,28 +504,5 @@ public class Principal {
 		System.out.println(target.getElement().getElement().getName());
 	}
 	
-	public static void leerPersonajes(Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target,final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo) {
-		// TODO debemos devolver de alguna forma los elementos, ya sea por un return o con una lista o lo que sea
-		TECLADO.nextLine();
-		System.out.print("Introduce el 1er personaje: ");
-		final String p1= TECLADO.nextLine();
-		System.out.print("Introduce el 2do personaje: ");
-		final String p2= TECLADO.nextLine();
-		
-		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = grafo.getVertices(); 
-		
-		// Recorremos todos los vértices mediante el Iterator correspondiente hasta que coincidan con el leído en el fichero
-		while (vertices.hasNext()) { 
-			Vertex<DecoratedElement<Personaje>> vertice = vertices.next();
-			
-			if (p1.equalsIgnoreCase(vertice.getElement().getElement().getName()))
-				source = vertice;
-			else if (p2.equalsIgnoreCase(vertice.getElement().getElement().getName()))
-				target = vertice;
-			
-			if (source != null && target != null) break; // Si los ha encontrado sale del bucle. Tenemos la arista acotada por sus vértices.
-		}
-		
-		if (source== null || target== null) throw new IllegalArgumentException("No existe alguno de los nodos indicados.");
-	}
+	
 }
