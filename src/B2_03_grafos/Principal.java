@@ -490,9 +490,9 @@ public class Principal {
 		// personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
 	}
 
-	public static void deshacerCamino(Vertex<DecoratedElement<Personaje>> target) {
-		// TODO: copiar y pegar adaptando
-		System.out.println(target.getElement().getParent().getElement().getName());
-		System.out.println(target.getElement().getElement().getName());
+	public static void deshacerCamino(DecoratedElement<Personaje> target) {
+		if (target.getParent()!= null) deshacerCamino(target.getParent());
+		
+		System.out.println(target.getElement());
 	}
 }
