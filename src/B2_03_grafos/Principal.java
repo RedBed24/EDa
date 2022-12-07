@@ -485,9 +485,38 @@ public class Principal {
 		}
 	}
 
-	private static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
-		// TODO: copiar y pegar adaptando
-		// personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
+	public static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
+		Queue<Vertex<DecoratedElement<Personaje>>> vertices= new LinkedBlockingQueue<Vertex<DecoratedElement<Personaje>>>();
+		vertices.add(source);
+		
+		while (!vertices.isEmpty()) {
+			Vertex<DecoratedElement<Personaje>> actualVertex= vertices.poll();
+			
+			if (actualVertex.getElement().getElement().getName().equals(target.getElement().getElement().getName())) return;
+			
+			actualVertex.getElement().setVisited(true);
+
+			Iterator<Edge<DecoratedElement<Integer>>> adyacentEdges= grafo.incidentEdges(actualVertex);
+			
+			while (adyacentEdges.hasNext()) {
+				Edge<DecoratedElement<Integer>> actualEdge= adyacentEdges.next();
+				Vertex<DecoratedElement<Personaje>> nextVertex= grafo.opposite(actualVertex, actualEdge);
+
+				if (!nextVertex.getElement().getVisited()) {
+					Personaje candidato= nextVertex.getElement().getElement();
+
+					if (candidato.getName().equals(target.getElement().getElement().getName())) {
+						nextVertex.getElement().setParent(actualVertex.getElement());
+						return;
+					}
+
+					if (candidato.getType()== Type.PER && actualEdge.getElement().getElement()>= 10) {
+						vertices.add(nextVertex);
+						nextVertex.getElement().setParent(actualVertex.getElement());
+					}
+				}
+			}
+		}
 	}
 
 	public static void deshacerCamino(DecoratedElement<Personaje> target) {
