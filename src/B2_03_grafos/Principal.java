@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 
-import B2_03_colas.Paciente;
 import B2_03_grafos.Personaje.*;
 import graphsDSESIUCLM.*;
 
@@ -88,7 +88,7 @@ public class Principal {
 	
 	public static void menú(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo) {
 		Vertex<DecoratedElement<Personaje>> source = null, target = null;
-		Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes = new LinkedBlockingQueue<Vertex<DecoratedElement<Personaje>>>();
+		Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes = new ArrayBlockingQueue<Vertex<DecoratedElement<Personaje>>>(2);
 		while (true) { // Mientras el usuario no especifique la opción 5, la cual tiene un return */
 			try {
 				// Muestra del menú
@@ -108,25 +108,23 @@ public class Principal {
 					// Apartado b
 					case 2: 
 						limpiarEtiquetas(grafo);
-						pedirPersonajes(source, target, grafo, colaPersonajes);
+						pedirPersonajes(grafo, colaPersonajes);
 						source = colaPersonajes.remove();
 						target = colaPersonajes.remove();
 						DFS(grafo, source, target);
-						System.out.println("Personaje de "+ target.getElement().getElement().getName()); // Imprimir el último
-						if (target.getElement().getParent() == null) System.out.println("No existe un camino entre los personajes dados.");
+						if (target.getElement().getParent()== null) System.out.println("No existe un camino entre los personajes dados.");
+						else deshacerCamino(target.getElement());
 						break;
 					
 					// Apartado c
 					case 3:
-						pedirPersonajes(source, target, grafo, colaPersonajes);
+						limpiarEtiquetas(grafo);
+						pedirPersonajes(grafo, colaPersonajes);
 						source = colaPersonajes.remove();
 						target = colaPersonajes.remove();
 						BFS(grafo, source, target);
-						if (target.getElement().getParent()!= null) deshacerCamino(target);
-						else System.out.println("No existe un camino entre los personajes dados.");
-						/* TODO:
-						 * personajeCandidato.getType()== Typer.PER && arista(Anterior, PersonajeCandidato).getElement() >= 10
-						 */
+						if (target.getElement().getParent()== null) System.out.println("No existe un camino entre los personajes dados.");
+						else deshacerCamino(target.getElement());
 						break;
 					
 					// Opción de salida
@@ -140,7 +138,7 @@ public class Principal {
 				System.err.println("Error al introducir la selección del menú.");
 				TECLADO.next(); // Se quita el valor erróneo del búffer
 			} catch (IllegalArgumentException e) {
-				System.err.println(e);
+				System.err.println(e.getMessage());
 			}
 		}
 
@@ -388,8 +386,7 @@ public class Principal {
 	 * @return Una cadena que indica la pareja y su cantidad de relaciones.
 	 ***********************************/
 	
-	public static void pedirPersonajes(Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target, 
-			final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes) {
+	public static void pedirPersonajes(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes) {
 		/* TODO: No terminado. He trabajado en diversas cosas. 
 		 * 
 		 * He trabajado en pedirPersonajes y he hechos diversas pruebas con el algoritmo DFS. He añadido una
@@ -404,6 +401,7 @@ public class Principal {
 		 * Dice que ahí se harían diversas operaciones con el nodo, si es necesario. Entonces, podemos deshacer el camino ahí, ¿no?
 		 * Sin embargo, he ido haciendo pruebas y el previsit funciona (aunque no sé si imprime en el orden correcto), pero el 
 		 * postvisit da problemas. Poquito más por hoy.*/
+		Vertex<DecoratedElement<Personaje>> source= null, target= null;
 		//
 		TECLADO.nextLine();
 		//
@@ -424,12 +422,13 @@ public class Principal {
 			else if (p2.equalsIgnoreCase(vertice.getElement().getElement().getName()))
 				target = vertice;
 			
-			if (source != null && target != null) break; // Si los ha encontrado sale del bucle. Tenemos la arista acotada por sus vértices.
+			if (source != null && target != null) break; // Si los ha encontrado sale del bucle.
 		}
 		
 		//
 		if (source == null || target == null) throw new IllegalArgumentException("Uno de los nombres indicados no existe.");
-		else { colaPersonajes.add(source); colaPersonajes.add(target); }
+		colaPersonajes.add(source);
+		colaPersonajes.add(target);
 	}
 
 	/***********************************
@@ -445,10 +444,10 @@ public class Principal {
 	public static void limpiarEtiquetas(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
 		Iterator<Vertex<DecoratedElement<Personaje>>> vertices= graph.getVertices();
 		while (vertices.hasNext()) {
-			Vertex<DecoratedElement<Personaje>> vertex = vertices.next();
-			vertex.getElement().setVisited(false);
-			vertex.getElement().setParent(null);
-			vertex.getElement().setDistance(0);
+			DecoratedElement<Personaje> decorado= vertices.next().getElement();
+			decorado.setVisited(false);
+			decorado.setParent(null);
+			decorado.setDistance(0);
 		}
 
 		// TODO: uhm, igual lo suyo sería poner otro elemento decorado para las aristas, más que nada porque lo suyo sería que tuviera atributos diferentes xd
@@ -463,9 +462,6 @@ public class Principal {
 	}
 
 	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Personaje>> end) {
-		
-		//Previsit
-		System.out.println("Personaje de " + start.getElement().getElement().getName());
 		start.getElement().setVisited(true);
 		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.incidentEdges(start);
 		
@@ -487,10 +483,6 @@ public class Principal {
 			}
 			
 		}
-		//Postvisit
-		//System.out.println("Personaje de " + start.getElement().getElement().getName());
-		
-		 
 	}
 
 	private static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
@@ -503,6 +495,4 @@ public class Principal {
 		System.out.println(target.getElement().getParent().getElement().getName());
 		System.out.println(target.getElement().getElement().getName());
 	}
-	
-	
 }
