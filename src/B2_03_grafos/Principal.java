@@ -113,7 +113,7 @@ public class Principal {
 						target = colaPersonajes.remove();
 						DFS(grafo, source, target);
 						if (target.getElement().getParent()== null) System.out.println("No existe un camino entre los personajes dados.");
-						else deshacerCamino(target.getElement());
+						else System.out.println(deshacerCamino(target.getElement()));
 						break;
 					
 					// Apartado c
@@ -124,7 +124,7 @@ public class Principal {
 						target = colaPersonajes.remove();
 						BFS(grafo, source, target);
 						if (target.getElement().getParent()== null) System.out.println("No existe un camino entre los personajes dados.");
-						else deshacerCamino(target.getElement());
+						else System.out.println(deshacerCamino(target.getElement()));
 						break;
 					
 					// Opción de salida
@@ -387,20 +387,6 @@ public class Principal {
 	 ***********************************/
 	
 	public static void pedirPersonajes(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes) {
-		/* TODO: No terminado. He trabajado en diversas cosas. 
-		 * 
-		 * He trabajado en pedirPersonajes y he hechos diversas pruebas con el algoritmo DFS. He añadido una
-		 * cola para guardar los personajes. Básicamente, los vamos a sacar en orden FIFO entonces una lista o una cola me es indiferente.
-		 * Como no creo que dé problemas una cola (por el hecho de que siempre se quita el primero que se metió) la dejamos. Si se presentan
-		 * problemas o si pensáis que es mejor una lista, lo cambiamos.
-		 * 
-		 * También otra cosa a comentar:
-		 * Si os fijáis en la diapositiva de la que Samu hizo copia y pega del DFS pone "Previsit. Optional: Do something with the node"
-		 * y en otro lado "Postvisit. Optional: Do something with the node". Esto me da que pensar:
-		 * 
-		 * Dice que ahí se harían diversas operaciones con el nodo, si es necesario. Entonces, podemos deshacer el camino ahí, ¿no?
-		 * Sin embargo, he ido haciendo pruebas y el previsit funciona (aunque no sé si imprime en el orden correcto), pero el 
-		 * postvisit da problemas. Poquito más por hoy.*/
 		Vertex<DecoratedElement<Personaje>> source= null, target= null;
 		//
 		TECLADO.nextLine();
@@ -449,69 +435,109 @@ public class Principal {
 			decorado.setParent(null);
 			decorado.setDistance(0);
 		}
-
-		// TODO: uhm, igual lo suyo sería poner otro elemento decorado para las aristas, más que nada porque lo suyo sería que tuviera atributos diferentes xd
-		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.getEdges();
-		while (edges.hasNext()) {
-			Edge<DecoratedElement<Integer>> edge= edges.next();
-			edge.getElement().setVisited(false);
-			edge.getElement().setParent(null);
-			edge.getElement().setDistance(0);
-		}
-		
 	}
 
+	/***********************************
+	 * @name DFS
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description aplica un algoritmo DFS al grafo desde start hasta encontrar end, haciendo que todos los nodos intermedios cumplan ciertas condiciones y en estos, guarda una sucesión de padres
+	 * 
+	 * @param grafo --> Grafo principal
+	 * @param start --> Vértice inicial desde el que se empezará a crear el camino
+	 * @param end --> Vértice final cuando este se encuentre, se terminará el recorrido
+	 * 
+	 ***********************************/
 	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Personaje>> end) {
+		// marcamos el actual como visitado
 		start.getElement().setVisited(true);
 		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.incidentEdges(start);
 		
+		// miraremos sus vértices adyacentes mediante las aristas
 		while (edges.hasNext()) {
 			Edge<DecoratedElement<Integer>> actualEdge = edges.next();
 			Vertex<DecoratedElement<Personaje>> nextVertex = graph.opposite(start, actualEdge);
 
+			// si el nodo adyacente no está visitado
 			if (!nextVertex.getElement().getVisited()) {
+				// obtenemos el personaje para ver si cumple las condiciones
 				Personaje personajeCandidato = nextVertex.getElement().getElement();
 				
+				// si es el que buscábamos
 				if (nextVertex.getElement().equals(end.getElement())) {
+					// marcamos su padre
 					nextVertex.getElement().setParent(start.getElement());
+					// lo marcamos como visitado
+					end.getElement().setVisited(true);
+					// terminamos
 					return;
 				}
+				// si el personaje cumple las condiciones, pasará a pertenecer al camino
 				if ((!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender() != Gender.MALE) && personajeCandidato.getFreqSum() >= 80) {
+					// marcamos su padre
 					nextVertex.getElement().setParent(start.getElement());
+					// pasamos a la siguiente iteración del DFS (donde además se marcará como visitado este personaje)
 					DFS(graph, nextVertex, end);
+					// si hemos obtenido el final, terminaremos
+					if (end.getElement().getVisited()) return;
 				}
 			}
 			
 		}
 	}
 
+	/***********************************
+	 * @name BFS
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description aplica un algoritmo BFS al grafo desde start hasta encontrar end, haciendo que todos los nodos intermedios cumplan ciertas condiciones y en estos, guarda una sucesión de padres
+	 * 
+	 * @param grafo --> Grafo principal
+	 * @param start --> Vértice inicial desde el que se empezará a crear el camino
+	 * @param end --> Vértice final cuando este se encuentre, se terminará el recorrido
+	 * 
+	 ***********************************/
 	public static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
+		// lista que contendrá todos los vértices a visitar
 		Queue<Vertex<DecoratedElement<Personaje>>> vertices= new LinkedBlockingQueue<Vertex<DecoratedElement<Personaje>>>();
 		vertices.add(source);
 		
+		// mientras queden vértices por visitar
 		while (!vertices.isEmpty()) {
+			// obtenermos el vértice a visitar
 			Vertex<DecoratedElement<Personaje>> actualVertex= vertices.poll();
 			
+			// si es el final, terminaremos
+			// TODO: Esto realmente no es necesario, ya que se comprueba luego antes de obtener el siguiente vértice
 			if (actualVertex.getElement().getElement().getName().equals(target.getElement().getElement().getName())) return;
 			
+			// lo marcamos como visitado
 			actualVertex.getElement().setVisited(true);
 
 			Iterator<Edge<DecoratedElement<Integer>>> adyacentEdges= grafo.incidentEdges(actualVertex);
 			
+			// miramos los vértices adyacentes al actual mediante las aristas
 			while (adyacentEdges.hasNext()) {
 				Edge<DecoratedElement<Integer>> actualEdge= adyacentEdges.next();
 				Vertex<DecoratedElement<Personaje>> nextVertex= grafo.opposite(actualVertex, actualEdge);
 
+				// si el vértice adyacente no está visitado
 				if (!nextVertex.getElement().getVisited()) {
 					Personaje candidato= nextVertex.getElement().getElement();
 
+					// si es el final, terminamos
 					if (candidato.getName().equals(target.getElement().getElement().getName())) {
 						nextVertex.getElement().setParent(actualVertex.getElement());
 						return;
 					}
 
+					// comprobamos si cumple las condiciones necesarias para poder ser el siguiente vértice
 					if (candidato.getType()== Type.PER && actualEdge.getElement().getElement()>= 10) {
+						// lo añadimos a la cola
 						vertices.add(nextVertex);
+						// marcamos que el siguiente es el hijo del actual
 						nextVertex.getElement().setParent(actualVertex.getElement());
 					}
 				}
@@ -519,9 +545,18 @@ public class Principal {
 		}
 	}
 
-	public static void deshacerCamino(DecoratedElement<Personaje> target) {
-		if (target.getParent()!= null) deshacerCamino(target.getParent());
-		
-		System.out.println(target.getElement());
+	/***********************************
+	 * @name deshacerEtiquetas
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description recorre todos los padres empezando desde el final hasta llegar al padre que tenga null, el cual es el principio, entonces devuelve el nombre de este e irá añadiendo los nombres de los hijos a la derecha
+	 * 
+	 * @param target --> Elemento Decorado del final del camino
+	 * 
+	 * @return String con todos los personajes contenidos en el camino
+	 ***********************************/
+	public static String deshacerCamino(DecoratedElement<Personaje> target) {
+		return (target.getParent()!= null ? deshacerCamino(target.getParent()) : "")+ "\n"+ target;
 	}
 }
