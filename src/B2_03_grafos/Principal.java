@@ -23,7 +23,8 @@ import graphsDSESIUCLM.*;
 public class Principal {
 
 	final static Scanner TECLADO = new Scanner(System.in);
-	final static String MENÚ = "\nIntroduce una opción:\n 1: Apartado a\n 2: Apartado b\n 3: Apartado c\n 4: Salir del programa";
+	final static String MENÚ = "\nIntroduce una opción:\n 1: Apartado a - Información relativa al grafo del Señor de los Anillos"
+			+ "\n 2: Apartado b - Formación del comando especial para acabar con el Rey Brujo\n 3: Apartado c - Red de comunicación segura entre dos personajes\n 4: Salir del programa";
 	
 	/***********************************
 	 * @name main
@@ -48,14 +49,14 @@ public class Principal {
 			File f = new File("lotr-pers.csv");
 			Scanner fichero = new Scanner(f);
 			
-			// Lectura de los vértices del grafo - VÉRTICES
+			// Obtención de los vértices del grafo - VÉRTICES
 			Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo = leerPersonajes(fichero);
 			
 			// Lectura del fichero de las relaciones
 			f = new File("networks-id-3books.csv");
 			fichero = new Scanner(f);
 			
-			// Lectura de las aristas del grafo - ARISTAS
+			// Obtención de las aristas del grafo - ARISTAS
 			grafo = leerRelaciones(fichero, grafo);
 			
 			// Cierre de los ficheros
@@ -87,18 +88,20 @@ public class Principal {
 	 ***********************************/
 	
 	public static void menú(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo) {
-		Vertex<DecoratedElement<Personaje>> source = null, target = null;
+		
+		// Cola donde se guardan los personajes que el usuario introduce por teclado
 		Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes = new ArrayBlockingQueue<Vertex<DecoratedElement<Personaje>>>(2);
-		while (true) { // Mientras el usuario no especifique la opción 5, la cual tiene un return */
+		
+		while (true) { 
 			try {
 				// Muestra del menú
 				System.out.println(MENÚ);
-				
 				// Comprobación de la opción elegida por el usuario
 				switch (TECLADO.nextInt()) {
 				
 					// Apartado a
 					case 1: 
+						System.out.println("A continuación, se muestra información diversa del grafo del Señor de los Anillos.");
 						System.out.println("- Cantidad de personajes en grafo: "+ grafo.getN());
 						System.out.println("- Cantidad de relaciones: "+ grafo.getM());
 						System.out.println("- Personaje con más cantidad de relaciones: \n\t"+ buscarPersonajeMayorInteracción(grafo)+"\n");
@@ -106,25 +109,15 @@ public class Principal {
 						break;
 							
 					// Apartado b
-					case 2: 
-						limpiarEtiquetas(grafo);
-						pedirPersonajes(grafo, colaPersonajes);
-						source = colaPersonajes.remove();
-						target = colaPersonajes.remove();
-						DFS(grafo, source, target);
-						if (target.getElement().getParent()== null) System.out.println("No existe un camino entre los personajes dados.");
-						else System.out.println(deshacerCamino(target.getElement()));
+					case 2:
+						System.out.println("<Se aplicará un DFS entre dos personajes cualesquiera para generar la formación del comando especial más fuerte>");
+						algoritmoDeBúsqueda(grafo, colaPersonajes, true);
 						break;
 					
 					// Apartado c
 					case 3:
-						limpiarEtiquetas(grafo);
-						pedirPersonajes(grafo, colaPersonajes);
-						source = colaPersonajes.remove();
-						target = colaPersonajes.remove();
-						BFS(grafo, source, target);
-						if (target.getElement().getParent()== null) System.out.println("No existe un camino entre los personajes dados.");
-						else System.out.println(deshacerCamino(target.getElement()));
+						System.out.println("<Se aplicará un BFS entre dos personajes cualesquiera para establecer la red de comunicación más corta y segura posible>");
+						algoritmoDeBúsqueda(grafo, colaPersonajes, false);
 						break;
 					
 					// Opción de salida
@@ -137,13 +130,14 @@ public class Principal {
 			} catch (InputMismatchException e) {
 				System.err.println("Error al introducir la selección del menú.");
 				TECLADO.next(); // Se quita el valor erróneo del búffer
+				
 			} catch (IllegalArgumentException e) {
 				System.err.println(e.getMessage());
 			}
 		}
 
 	}
-
+	
 	/***********************************
 	 * @name leerPersonajes
 	 * 
@@ -163,6 +157,7 @@ public class Principal {
 	
 	public static Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> leerPersonajes(final Scanner fichero) {
 		
+		// Grafo principal
 		final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo = new TreeMapGraph<DecoratedElement<Personaje>, DecoratedElement<Integer>>();
 		
 		fichero.nextLine(); /* La primera línea contiene los tipos de datos (id;type;subtype;name;...)
@@ -308,14 +303,14 @@ public class Principal {
 	 ***********************************/
 	
 	public static String buscarPersonajeMayorInteracción(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
-		// buscar el nodo con mayor grado
-		Personaje personajeMásRelaciones = null;
-		int mayorRelaciones = 0;
+
+		Personaje personajeMásRelaciones = null; // Personaje
+		int mayorRelaciones = 0;				 // Cantidad de relaciones
 		
 		Iterator<Vertex<DecoratedElement<Personaje>>> nodos= graph.getVertices(); // Iterador con todos los vértices
+		
 		while (nodos.hasNext()) {
 			Vertex<DecoratedElement<Personaje>> nodoActual= nodos.next();
-			
 			int cuenta = 0; // Lleva la cuenta de las aristas (relaciones) que tiene un nodo (personaje)
 			Iterator<Edge<DecoratedElement<Integer>>> aristasIncidentes = graph.incidentEdges(nodoActual); // Iterador con las aristas incidentes al vértice actual
 			while (aristasIncidentes.hasNext()) {
@@ -345,20 +340,20 @@ public class Principal {
 	 ***********************************/
 	
 	public static String relaciónConMásInteractuación (final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
-		// buscar la arista con mayor peso
-		Personaje personaje1= null, personaje2= null;
-		int mayorRelaciones= 0;
+		
+		Personaje personaje1 = null, personaje2 = null; // Pareja
+		int mayorRelaciones = 0;						// Cantidad de relaciones de la pareja
 
-		Iterator<Edge<DecoratedElement<Integer>>> aristas= graph.getEdges(); // Iterador con todas las aristas
+		Iterator<Edge<DecoratedElement<Integer>>> aristas = graph.getEdges(); // Iterador con todas las aristas
 		while (aristas.hasNext()) {
-			Edge<DecoratedElement<Integer>> aristaActual= aristas.next();
+			Edge<DecoratedElement<Integer>> aristaActual = aristas.next();
 
 			if (mayorRelaciones < aristaActual.getElement().getElement()) { // Si la arista actual tiene un peso mayor...
 				// Actualizamos el mayor número de relaciones
-				mayorRelaciones= aristaActual.getElement().getElement();
+				mayorRelaciones = aristaActual.getElement().getElement();
 				
 				// Obtenemos los vértices de la arista correspondiente
-				Vertex<DecoratedElement<Personaje>> personajes[]= graph.endVertices(aristaActual);
+				Vertex<DecoratedElement<Personaje>> personajes[] = graph.endVertices(aristaActual);
 				
 				// Conseguimos los personajes de los vértices a partir de la arista
 				personaje1 = personajes[0].getElement().getElement();
@@ -368,38 +363,69 @@ public class Principal {
 		return "\n\t" + personaje1+ " y \n\t"+personaje2+ " mantienen "+ mayorRelaciones+ " relaciones.";
 	}
 	
+	/***********************************
+	 * @name algoritmoDeBúsqueda
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description Se encarga de seleccionar el algoritmo de búsqueda que se debe aplicar y llevar a cabo determinadas acciones
+	 * 				para que sea posible. Esto es, limpiar las etiquetas de los vértices y aristas del grafo, pedir los personajes
+	 * 				al usuario, elegir en sí el algoritmo de búsqueda según el apartado y deshacer el camino conseguido (si existe).
+	 * 
+	 * @param grafo --> Grafo principal
+	 * @param colaPersonajes --> Cola a la que se añaden los personajes que el usuario introduce
+	 * @param quéAlgoritmo --> Booleano que permite saber si hay que ejecutar el apartado B - DFS (true) o el apartado C - BFS (false).
+	 * 
+	 ***********************************/
+	
+	public static void algoritmoDeBúsqueda(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes, boolean quéAlgoritmo) {
+		
+		Vertex<DecoratedElement<Personaje>> source = null,  target = null;
+		
+		// Limpiar las etiquetas de los vértices y aristas del grafo para que cada ejecución sea completamente distinta a la anterior
+		limpiarEtiquetas(grafo); 
+		
+		// Pedir los personajes entre los que se ejecutará el algoritmo DFS o BFS
+		pedirPersonajes(grafo, colaPersonajes);
+		source = colaPersonajes.remove();
+		target = colaPersonajes.remove();
+		
+		// Ejecutar un algoritmo de búsqueda según el valor de la variable booleana
+		if (quéAlgoritmo) DFS(grafo, source, target);
+		else BFS(grafo, source, target);
 
+		// Deshacer el camino desde el vértice destino
+		if (target.getElement().getParent() != null) System.out.println(deshacerCamino(target.getElement()));
+		else System.out.println("No existe un camino entre los personajes dados.");
+	}
+	
 	/***********************************
 	 * @name pedirPersonajes
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description 
+	 * @description Guarda en una cola los personajes que introduce el usuario.
 	 * 
-	 * @param source --> 
-	 * @param target -->
 	 * @param graph --> Grafo principal
-	 * @param colaPersonajes --> 
+	 * @param colaPersonajes --> Cola donde se añaden los personajes que el usuario introduce
 	 * 
-	 * @throws
-	 * 
-	 * @return Una cadena que indica la pareja y su cantidad de relaciones.
+	 * @throws IllegalArgumentException --> Lanzada cuando se introduce el mismo personaje en origen y destino o un personaje que no existe.
 	 ***********************************/
 	
 	public static void pedirPersonajes(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Queue<Vertex<DecoratedElement<Personaje>>> colaPersonajes) {
-		Vertex<DecoratedElement<Personaje>> source= null, target= null;
-		//
+		Vertex<DecoratedElement<Personaje>> source = null, target = null;
 		TECLADO.nextLine();
-		//
-		System.out.print("Introduce el primer personaje: ");
+		// Pedir personajes al usuario
+		System.out.print("Introduce el personaje origen: ");
 		final String p1 = TECLADO.nextLine();
-		System.out.print("Introduce el segundo personaje: ");
+		System.out.print("Introduce el personaje destino: ");
 		final String p2 = TECLADO.nextLine();
-		//
+		
+		// --- Comprobación de error 1: Mismo personaje ---
 		if(p1.equalsIgnoreCase(p2)) throw new IllegalArgumentException("Has indicado el mismo personaje. Debes indicar personajes distintos.");
-		//
+		
+		// Recorremos todos los vértices mediante el Iterator correspondiente hasta que coincidan con los leídos por teclado
 		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = grafo.getVertices(); 
-		// Recorremos todos los vértices mediante el Iterator correspondiente hasta que coincidan con el leído en el fichero
 		while (vertices.hasNext()) { 
 			Vertex<DecoratedElement<Personaje>> vertice = vertices.next();
 			
@@ -411,8 +437,10 @@ public class Principal {
 			if (source != null && target != null) break; // Si los ha encontrado sale del bucle.
 		}
 		
-		//
+		// --- Comprobación de error 2: Personaje inexistente ---
 		if (source == null || target == null) throw new IllegalArgumentException("Uno de los nombres indicados no existe.");
+		
+		// Adición de los personajes a la cola en su formato correcto
 		colaPersonajes.add(source);
 		colaPersonajes.add(target);
 	}
@@ -422,15 +450,16 @@ public class Principal {
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description Resetea las etiquetas (visitado, padre, distancia...) usadas para recorer el grafo. Permite la ejecución de otra búsqueda sin que la anterior afecte a esta
+	 * @description Resetea las etiquetas (visitado, padre, distancia...) usadas para recorer el grafo. 
+	 * 				Permite la ejecución de otra búsqueda sin que la anterior afecte a esta.
 	 * 
 	 * @param graph --> Grafo principal
 	 ***********************************/
 	
 	public static void limpiarEtiquetas(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
-		Iterator<Vertex<DecoratedElement<Personaje>>> vertices= graph.getVertices();
+		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = graph.getVertices();
 		while (vertices.hasNext()) {
-			DecoratedElement<Personaje> decorado= vertices.next().getElement();
+			DecoratedElement<Personaje> decorado = vertices.next().getElement();
 			decorado.setVisited(false);
 			decorado.setParent(null);
 			decorado.setDistance(0);
@@ -442,45 +471,41 @@ public class Principal {
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description aplica un algoritmo DFS al grafo desde start hasta encontrar end, haciendo que todos los nodos intermedios cumplan ciertas condiciones y en estos, guarda una sucesión de padres
+	 * @description Aplica un algoritmo DFS al grafo desde start hasta encontrar end.
 	 * 
-	 * @param grafo --> Grafo principal
-	 * @param start --> Vértice inicial desde el que se empezará a crear el camino
-	 * @param end --> Vértice final cuando este se encuentre, se terminará el recorrido
+	 * @param graph --> Grafo principal
+	 * @param start --> Vértice origen del camino
+	 * @param end --> Vértice destino del camino
 	 * 
 	 ***********************************/
+	
 	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Personaje>> end) {
-		// marcamos el actual como visitado
-		start.getElement().setVisited(true);
-		Iterator<Edge<DecoratedElement<Integer>>> edges= graph.incidentEdges(start);
 		
-		// miraremos sus vértices adyacentes mediante las aristas
+		// Marcamos el actual como visitado
+		start.getElement().setVisited(true);
+		
+		// Miramos sus vértices adyacentes mediante las aristas incidentes
+		Iterator<Edge<DecoratedElement<Integer>>> edges = graph.incidentEdges(start);
 		while (edges.hasNext()) {
-			Edge<DecoratedElement<Integer>> actualEdge = edges.next();
-			Vertex<DecoratedElement<Personaje>> nextVertex = graph.opposite(start, actualEdge);
+			Edge<DecoratedElement<Integer>> actualEdge = edges.next();							// Arista actual
+			Vertex<DecoratedElement<Personaje>> nextVertex = graph.opposite(start, actualEdge); // Vértice siguiente
 
-			// si el nodo adyacente no está visitado
+			// Si el nodo adyacente no está visitado
 			if (!nextVertex.getElement().getVisited()) {
-				// obtenemos el personaje para ver si cumple las condiciones
 				Personaje personajeCandidato = nextVertex.getElement().getElement();
 				
-				// si es el que buscábamos
+				// Si el personaje es el mismo que el que contiene el elemento decorado del vértice destino, terminamos con la arista final.
 				if (nextVertex.getElement().equals(end.getElement())) {
-					// marcamos su padre
-					nextVertex.getElement().setParent(start.getElement());
-					// lo marcamos como visitado
-					end.getElement().setVisited(true);
-					// terminamos
+					nextVertex.getElement().setParent(start.getElement()); // Asignamos su padre
+					end.getElement().setVisited(true); // Y marcamos el nodo final como visitado
 					return;
 				}
-				// si el personaje cumple las condiciones, pasará a pertenecer al camino
+				
+				// Si el personaje cumple determinadas condiciones, se incluye en el camino.
 				if ((!personajeCandidato.getSubType().equalsIgnoreCase("MEN") || personajeCandidato.getGender() != Gender.MALE) && personajeCandidato.getFreqSum() >= 80) {
-					// marcamos su padre
-					nextVertex.getElement().setParent(start.getElement());
-					// pasamos a la siguiente iteración del DFS (donde además se marcará como visitado este personaje)
-					DFS(graph, nextVertex, end);
-					// si hemos obtenido el final, terminaremos
-					if (end.getElement().getVisited()) return;
+					nextVertex.getElement().setParent(start.getElement()); // Marcamos su padre
+					DFS(graph, nextVertex, end); // Pasamos a la siguiente iteración del DFS
+					if (end.getElement().getVisited()) return; // Si obtenemos el final, terminamos.
 				}
 			}
 			
@@ -492,53 +517,52 @@ public class Principal {
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description aplica un algoritmo BFS al grafo desde start hasta encontrar end, haciendo que todos los nodos intermedios cumplan ciertas condiciones y en estos, guarda una sucesión de padres
+	 * @description Aplica un algoritmo BFS al grafo desde start hasta encontrar end.
 	 * 
-	 * @param grafo --> Grafo principal
-	 * @param start --> Vértice inicial desde el que se empezará a crear el camino
-	 * @param end --> Vértice final cuando este se encuentre, se terminará el recorrido
+	 * @param graph --> Grafo principal
+	 * @param start --> Vértice origen del camino
+	 * @param end --> Vértice destino del camino
 	 * 
 	 ***********************************/
-	public static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> grafo, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
-		// lista que contendrá todos los vértices a visitar
-		Queue<Vertex<DecoratedElement<Personaje>>> vertices= new LinkedBlockingQueue<Vertex<DecoratedElement<Personaje>>>();
+	
+	public static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
+		
+		// Cola con los vértices a visitar
+		Queue<Vertex<DecoratedElement<Personaje>>> vertices = new LinkedBlockingQueue<Vertex<DecoratedElement<Personaje>>>();
 		vertices.add(source);
 		
-		// mientras queden vértices por visitar
+		// Mientras queden vértices por visitar
 		while (!vertices.isEmpty()) {
-			// obtenermos el vértice a visitar
-			Vertex<DecoratedElement<Personaje>> actualVertex= vertices.poll();
+			Vertex<DecoratedElement<Personaje>> actualVertex = vertices.poll(); // Vértice actual
 			
 			// si es el final, terminaremos
 			// TODO: Esto realmente no es necesario, ya que se comprueba luego antes de obtener el siguiente vértice
-			if (actualVertex.getElement().getElement().getName().equals(target.getElement().getElement().getName())) return;
+			//if (actualVertex.getElement().getElement().getName().equals(target.getElement().getElement().getName())) return;
 			
-			// lo marcamos como visitado
+			// Marcamos el actual como visitado
 			actualVertex.getElement().setVisited(true);
 
-			Iterator<Edge<DecoratedElement<Integer>>> adyacentEdges= grafo.incidentEdges(actualVertex);
+			Iterator<Edge<DecoratedElement<Integer>>> adyacentEdges = graph.incidentEdges(actualVertex);
 			
-			// miramos los vértices adyacentes al actual mediante las aristas
+			// Miramos sus vértices adyacentes mediante las aristas incidentes
 			while (adyacentEdges.hasNext()) {
-				Edge<DecoratedElement<Integer>> actualEdge= adyacentEdges.next();
-				Vertex<DecoratedElement<Personaje>> nextVertex= grafo.opposite(actualVertex, actualEdge);
+				Edge<DecoratedElement<Integer>> actualEdge = adyacentEdges.next(); // Arista actual
+				Vertex<DecoratedElement<Personaje>> nextVertex = graph.opposite(actualVertex, actualEdge); // Vértice siguiente
 
-				// si el vértice adyacente no está visitado
+				// Si el nodo adyacente no está visitado
 				if (!nextVertex.getElement().getVisited()) {
-					Personaje candidato= nextVertex.getElement().getElement();
+					Personaje personajeCandidato = nextVertex.getElement().getElement();
 
-					// si es el final, terminamos
-					if (candidato.getName().equals(target.getElement().getElement().getName())) {
+					// Si el personaje es el último, terminamos.
+					if (personajeCandidato.getName().equals(target.getElement().getElement().getName())) {
 						nextVertex.getElement().setParent(actualVertex.getElement());
 						return;
 					}
 
-					// comprobamos si cumple las condiciones necesarias para poder ser el siguiente vértice
-					if (candidato.getType()== Type.PER && actualEdge.getElement().getElement()>= 10) {
-						// lo añadimos a la cola
-						vertices.add(nextVertex);
-						// marcamos que el siguiente es el hijo del actual
-						nextVertex.getElement().setParent(actualVertex.getElement());
+					// Si el personaje cumple determinadas condiciones, se incluye en el camino.
+					if (personajeCandidato.getType() == Type.PER && actualEdge.getElement().getElement() >= 10) {
+						vertices.add(nextVertex); // Lo añadimos a la cola
+						nextVertex.getElement().setParent(actualVertex.getElement()); // El siguiente nodo es el hijo del actual
 					}
 				}
 			}
@@ -546,17 +570,17 @@ public class Principal {
 	}
 
 	/***********************************
-	 * @name deshacerEtiquetas
+	 * @name deshacerCamino
 	 * 
 	 * @authors DJS - B2 - 03
 	 * 
-	 * @description recorre todos los padres empezando desde el final hasta llegar al padre que tenga null, el cual es el principio, entonces devuelve el nombre de este e irá añadiendo los nombres de los hijos a la derecha
+	 * @description Recorre todos los padres empezando desde el final hasta llegar al vértice origen para imprimir el camino.
 	 * 
-	 * @param target --> Elemento Decorado del final del camino
+	 * @param target --> Elemento decorado del vértice destino donde se guarda el camino.
 	 * 
-	 * @return String con todos los personajes contenidos en el camino
+	 * @return String con el camino encontrado.
 	 ***********************************/
 	public static String deshacerCamino(DecoratedElement<Personaje> target) {
-		return (target.getParent()!= null ? deshacerCamino(target.getParent()) : "")+ "\n"+ target;
+		return (target.getParent() != null ? deshacerCamino(target.getParent()) : "")+ "\n"+ target;
 	}
 }
