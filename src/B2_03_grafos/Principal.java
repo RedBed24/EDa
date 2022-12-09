@@ -69,8 +69,7 @@ public class Principal {
 			System.err.println("\nUno de los ficheros no se ha encontrado.\n");
 			
 		} catch (Exception e){
-			System.err.println("Error inesperado."+e.getMessage());
-			e.printStackTrace();
+			System.err.println("Error inesperado ");
 			
 		}
 	}
@@ -102,7 +101,7 @@ public class Principal {
 					// Apartado a
 					case 1: 
 						System.out.println("A continuación, se muestra información diversa del grafo del Señor de los Anillos.");
-						System.out.println("- Cantidad de personajes en grafo: "+ grafo.getN());
+						System.out.println("- Cantidad de personajes: "+ grafo.getN());
 						System.out.println("- Cantidad de relaciones: "+ grafo.getM());
 						System.out.println("- Personaje con más cantidad de relaciones: \n\t"+ buscarPersonajeMayorInteracción(grafo)+"\n");
 						System.out.println("- Pareja con el mayor nivel de interacción: "+ relaciónConMásInteractuación(grafo));
@@ -231,7 +230,7 @@ public class Principal {
 	 * @description Lee cada línea del fichero de relaciones con el fin de añadir al grafo las aristas (relaciones)
 	 * 				que se generen a partir de la información proporcionada: vértice origen, vértice destino y peso.
 	 * 
-	 * @param fichero --> Scanner abierto con los datos de los relaciones del fichero "networks-id-3books.csv".
+	 * @param fichero --> Scanner abierto con los datos de las relaciones del fichero "networks-id-3books.csv".
 	 * 
 	 * @throws IndexOutOfBoundsException --> Lanzada cuando la línea leída no contiene la información necesaria.
 	 * @throws NumberFormatException --> Lanzada cuando se presenta un error a la hora de realizar una conversión de tipo de datos.
@@ -299,7 +298,7 @@ public class Principal {
 	 * 
 	 * @param graph --> Grafo principal
 	 * 
-	 * @return Una cadena que indica el personaje y su cantidad de relaciones
+	 * @return Una cadena con el personaje y su cantidad de relaciones.
 	 ***********************************/
 	
 	public static String buscarPersonajeMayorInteracción(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
@@ -310,7 +309,7 @@ public class Principal {
 		Iterator<Vertex<DecoratedElement<Personaje>>> nodos= graph.getVertices(); // Iterador con todos los vértices
 		
 		while (nodos.hasNext()) {
-			Vertex<DecoratedElement<Personaje>> nodoActual= nodos.next();
+			Vertex<DecoratedElement<Personaje>> nodoActual = nodos.next();
 			int cuenta = 0; // Lleva la cuenta de las aristas (relaciones) que tiene un nodo (personaje)
 			Iterator<Edge<DecoratedElement<Integer>>> aristasIncidentes = graph.incidentEdges(nodoActual); // Iterador con las aristas incidentes al vértice actual
 			while (aristasIncidentes.hasNext()) {
@@ -336,7 +335,7 @@ public class Principal {
 	 * 
 	 * @param graph --> Grafo principal
 	 * 
-	 * @return Una cadena que indica la pareja y su cantidad de relaciones.
+	 * @return Una cadena con la pareja y su cantidad de relaciones.
 	 ***********************************/
 	
 	public static String relaciónConMásInteractuación (final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
@@ -400,6 +399,27 @@ public class Principal {
 	}
 	
 	/***********************************
+	 * @name limpiarEtiquetas
+	 * 
+	 * @authors DJS - B2 - 03
+	 * 
+	 * @description Resetea las etiquetas (visitado, padre, distancia...) usadas para recorer el grafo. 
+	 * 				Permite la ejecución de otra búsqueda sin que la anterior afecte a esta.
+	 * 
+	 * @param graph --> Grafo principal
+	 ***********************************/
+	
+	public static void limpiarEtiquetas(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
+		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = graph.getVertices();
+		while (vertices.hasNext()) {
+			DecoratedElement<Personaje> decorado = vertices.next().getElement();
+			decorado.setVisited(false);
+			decorado.setParent(null);
+			decorado.setDistance(0);
+		}
+	}
+	
+	/***********************************
 	 * @name pedirPersonajes
 	 * 
 	 * @authors DJS - B2 - 03
@@ -446,27 +466,6 @@ public class Principal {
 	}
 
 	/***********************************
-	 * @name limpiarEtiquetas
-	 * 
-	 * @authors DJS - B2 - 03
-	 * 
-	 * @description Resetea las etiquetas (visitado, padre, distancia...) usadas para recorer el grafo. 
-	 * 				Permite la ejecución de otra búsqueda sin que la anterior afecte a esta.
-	 * 
-	 * @param graph --> Grafo principal
-	 ***********************************/
-	
-	public static void limpiarEtiquetas(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph) {
-		Iterator<Vertex<DecoratedElement<Personaje>>> vertices = graph.getVertices();
-		while (vertices.hasNext()) {
-			DecoratedElement<Personaje> decorado = vertices.next().getElement();
-			decorado.setVisited(false);
-			decorado.setParent(null);
-			decorado.setDistance(0);
-		}
-	}
-
-	/***********************************
 	 * @name DFS
 	 * 
 	 * @authors DJS - B2 - 03
@@ -476,7 +475,6 @@ public class Principal {
 	 * @param graph --> Grafo principal
 	 * @param start --> Vértice origen del camino
 	 * @param end --> Vértice destino del camino
-	 * 
 	 ***********************************/
 	
 	public static void DFS(final Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, final Vertex<DecoratedElement<Personaje>> start, final Vertex<DecoratedElement<Personaje>> end) {
@@ -487,7 +485,7 @@ public class Principal {
 		// Miramos sus vértices adyacentes mediante las aristas incidentes
 		Iterator<Edge<DecoratedElement<Integer>>> edges = graph.incidentEdges(start);
 		while (edges.hasNext()) {
-			Edge<DecoratedElement<Integer>> actualEdge = edges.next();							// Arista actual
+			Edge<DecoratedElement<Integer>> actualEdge = edges.next();	// Arista actual
 			Vertex<DecoratedElement<Personaje>> nextVertex = graph.opposite(start, actualEdge); // Vértice siguiente
 
 			// Si el nodo adyacente no está visitado
@@ -522,7 +520,6 @@ public class Principal {
 	 * @param graph --> Grafo principal
 	 * @param start --> Vértice origen del camino
 	 * @param end --> Vértice destino del camino
-	 * 
 	 ***********************************/
 	
 	public static void BFS(Graph<DecoratedElement<Personaje>, DecoratedElement<Integer>> graph, Vertex<DecoratedElement<Personaje>> source, Vertex<DecoratedElement<Personaje>> target) {
@@ -534,10 +531,6 @@ public class Principal {
 		// Mientras queden vértices por visitar
 		while (!vertices.isEmpty()) {
 			Vertex<DecoratedElement<Personaje>> actualVertex = vertices.poll(); // Vértice actual
-			
-			// si es el final, terminaremos
-			// TODO: Esto realmente no es necesario, ya que se comprueba luego antes de obtener el siguiente vértice
-			//if (actualVertex.getElement().getElement().getName().equals(target.getElement().getElement().getName())) return;
 			
 			// Marcamos el actual como visitado
 			actualVertex.getElement().setVisited(true);

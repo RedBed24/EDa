@@ -1,5 +1,8 @@
 package B2_03_grafos;
 
+import B2_03_grafos.Personaje.Gender;
+import B2_03_grafos.Personaje.Type;
+
 /*********************************************************************
 * @name Personaje
 * 
@@ -65,7 +68,7 @@ public class Personaje {
 	}
 
 	public String toString() {
-		return "Personaje [type=" + type + ", subtype=" + subtype + ", name=" + name + ", gender=" + gender + "]";
+		return String.format("[name=%-12s | type=%-4s | subtype=%-6s | gender=%-7s ]", name, type, subtype, gender);
 	}
 	
 }
