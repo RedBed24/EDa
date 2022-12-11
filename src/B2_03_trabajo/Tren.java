@@ -13,7 +13,7 @@ public class Tren {
 		if ((this.numMáxVagones = numMáxVagones) <= 0) throw new IllegalArgumentException("El tren debe tener al menos un vagón.");
 		this.vagones = new ArrayList<Vagón>(numMáxVagones);
 		if ((this.numFilasVagón = numFilasVagón) <= 0) throw new IllegalArgumentException("El vagón necesita tener al menos una fila.");
-		vagones.add(new Vagón(0, numFilasVagón));
+		vagones.add(new Vagón(1, numFilasVagón));
 	}
 	
 	public int getNumVagones() {
@@ -102,6 +102,13 @@ public class Tren {
 		// No se pueden añadir más vagones al tren
 		return vagones.size()+1 < numMáxVagones;
 
+	}
+	
+	public String toString() {
+		String devolver="Tren";
+		for (Vagón vagón : vagones)
+			devolver+= "\n"+vagón;
+		return devolver;
 	}
 	
 }

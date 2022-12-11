@@ -9,7 +9,20 @@ public class Vagón {
 	final private int asientosTotales; 
 	private int asientosOcupados = 0;
 
-	public static int getNcolumnas() { //TODO: añadidos más getters y poco he hecho en las clases Asiento y Vagón. He tocado más Tren.
+	public Vagón(final int numVagón, final int numFilas) {
+		super();
+		this.numVagón= numVagón;
+		if ((this.nFilas = numFilas) <= 0) throw new IllegalArgumentException("El vagón debe tener al menos una fila.");
+		this.asientosTotales = nFilas*nColumnas;
+		
+		this.asientos = new Asiento[nFilas][nColumnas];
+		for (int i= 0; i< asientos.length; i++)
+			for (int j= 0; j< asientos[i].length; j++) 
+				// se tiene que inicializar para que el toString sea más fácil, si vamos inicializando a medida que compramos, aunque es más eficiente en cuanto a memeoria, sería más complicado en cuanto a lógica
+				asientos[i][j]= new Asiento();
+	}
+	
+	public static int getNcolumnas() {
 		return nColumnas;
 	}
 	
@@ -33,19 +46,6 @@ public class Vagón {
 		return asientosTotales - asientosOcupados;
 	}
 	
-	public Vagón(final int numVagón, final int numFilas) {
-		super();
-		this.numVagón= numVagón;
-		this.nFilas = numFilas;
-		if (this.nFilas <= 0) throw new IllegalArgumentException("El vagón debe tener al menos una fila.");
-		this.asientosTotales = nColumnas*nFilas;
-		
-		this.asientos = new Asiento[nColumnas][nFilas]; // TODO: No debería ser new Asiento[nFilas][nColumnas]???
-		for (int i= 0; i< asientos.length; i++)
-			for (int j= 0; j< asientos[i].length; j++) 
-				asientos[i][j]= new Asiento(null);
-	}
-	
 	public boolean reservarAsiento(final String identificadorOcupante) {
 		for (Asiento[] fila : asientos)
 			for (Asiento asiento : fila)
@@ -57,22 +57,15 @@ public class Vagón {
 	}
 	
 	public String toString() {
-		String devolver = "Vagón "+ numVagón+ "\nCuenta con: "+ getAsientosLibres()+" asientos libres.";
+		String devolver = "Vagón numero: "+ numVagón+ ".\nCuenta con: "+ getAsientosLibres()+" asientos libres.\n\n               ";
+		devolver+= "Izquierda | Derecha\nFila | Ventana |      Pasillo      | Ventana |\n     -----------------------------------------";
 		for (int i = 0; i < asientos.length; i++) {
-
-			devolver += "\nColumna: ";
-			switch (i) {
-				case 0: devolver += "Ventanilla Izquierda"; break;
-				case 1: devolver += "Pasillo Izquierdo   "; break;
-				case 2: devolver += "Pasillo Derecho     "; break;
-				case 3: devolver += "Ventanilla Derecha  "; break;
-			}
-			devolver += "\n";
+			devolver+= String.format("\n%-5d| " , i+1);
 
 			for (int j = 0; j < asientos[i].length; j++)
-				devolver += String.format("Asiento: %"+asientos[i].length+"d, estado: %s", j+1, asientos[i][j]);
+				devolver += asientos[i][j]+" | ";
 
 		}
-		return devolver;
+		return devolver+"\n     -----------------------------------------";
 	}
 }

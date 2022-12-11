@@ -6,8 +6,8 @@ public class Asiento {
 	private Boolean ocupado = false;
 	private String identificadorOcupante = null;
 	
-	public Asiento(final String identificadorOcupante) {
-		this.identificadorOcupante = identificadorOcupante;
+	public Asiento() {
+		super();
 	}
 	
 	public String getIdentificadorOcupante() {
@@ -26,8 +26,12 @@ public class Asiento {
 		return !ocupado;
 	}
 	
+	public String informaciónCompleja() {
+		return (ocupado ? "Ocupado por: "+ identificadorOcupante : "Libre");
+	}
+
 	public String toString() {
-		return (ocupado ? "Ocupado por "+identificadorOcupante : "Libre  ");
+		return (ocupado ? "Ocupado" : "Libre  ");
 	}
 
 	public boolean equals(Object obj) {
@@ -38,7 +42,7 @@ public class Asiento {
 		if (getClass() != obj.getClass())
 			return false;
 		Asiento other = (Asiento) obj;
-		return Objects.equals(identificadorOcupante, other.identificadorOcupante);
+		return Objects.equals(identificadorOcupante, other.getIdentificadorOcupante());
 	}
 	
 	public boolean reservarAsiento(final String identificadorOcupante) {
