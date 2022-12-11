@@ -63,7 +63,7 @@ public class Tren {
 				mensaje = null; // Este caso es equivalente a if(trenlleno()) mensaje = null;
 			else {	// ...y se pueden añadir más vagones, se añade un vagón más y se realiza la reserva
 				vagones.add(new Vagón(vagones.size(), numFilasVagón));	
-				vagones.get(vagones.size()).reservarAsiento(identificadorOcupante);
+				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
 			}
 		} 
 		// Si el tren tiene algún asiento libre...
