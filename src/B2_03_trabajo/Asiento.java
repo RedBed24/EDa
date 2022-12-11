@@ -31,7 +31,7 @@ public class Asiento {
 	}
 
 	public String toString() {
-		return (ocupado ? "Ocupado" : "Libre  ");
+		return (ocupado ? "\033[31mOcupado\u001B[0m" : "\033[32mLibre\u001B[0m  ");
 	}
 
 	public boolean equals(Object obj) {
