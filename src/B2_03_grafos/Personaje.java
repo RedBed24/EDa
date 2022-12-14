@@ -1,8 +1,5 @@
 package B2_03_grafos;
 
-import B2_03_grafos.Personaje.Gender;
-import B2_03_grafos.Personaje.Type;
-
 /*********************************************************************
 * @name Personaje
 * 
