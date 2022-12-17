@@ -3,6 +3,15 @@ package B2_03_trabajo;
 import java.util.ArrayList;
 import java.util.List;
 
+/*********************************************************************
+* @name Tren
+* 
+* @authors DJS - B2 - 03
+* 
+* @description Contiene la información acerca del tren, tanto sus características como los métodos que los manejan.
+* 			   Sin acabar
+***********************************************************************/
+// TODO: Nada nuevo
 public class Tren {
 	final private List<Vagón> vagones;
 	final private int numMáxVagones;
@@ -29,7 +38,7 @@ public class Tren {
 		return vagones.get(0).getAsientosTotales();
 	}
 	
-	public int capacidadTren() { // TODO: estos estaban con otros nombres que quizás pueden confundir.
+	public int capacidadTren() { 
 		// El número de asientos totales del tren es igual a la capacidad de un vagón por el número de vagones
 		return capacidadVagón() * numMáxVagones;
 	}
@@ -41,18 +50,13 @@ public class Tren {
 			libres += vagón.getAsientosLibres();
 		return libres;
 	}
-	public int ocupadosTren() { //TODO: literalmente, el método anterior y este son el contrario. De hecho, (por ejemplo) el
-								// de libresTren puede ser capacidadTren() - ocupadosTren() antes que eso.
+	public int ocupadosTren() { 
 		// El número de asientos ocupados del tren es igual a la suma de asientos ocupados de cada vagón del tren.
 		int ocupados = 0;
 		for (Vagón vagón : vagones)
 			ocupados += vagón.getAsientosOcupados();
 		return ocupados;
 	}
-	
-	/*public int getAsientosLibresMáx() {
-		return getAsientosTotalesMáx()* getAsientosOcupados();
-	}*/ // TODO: @Samu este método no lo entiendo. Puede que quizás se te colara o es que soy retrasado xddddd
 	
 	public String reservarAsiento(final String identificadorOcupante) {
 		String mensaje = "";
