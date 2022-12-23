@@ -55,14 +55,10 @@ public class Asiento {
 	}
 	
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Asiento other = (Asiento) obj;
-		return Objects.equals(identificadorOcupante, other.getIdentificadorOcupante());
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		return Objects.equals(identificadorOcupante, ((Asiento)obj).getIdentificadorOcupante());
 	}
 	
 	public String toString() {

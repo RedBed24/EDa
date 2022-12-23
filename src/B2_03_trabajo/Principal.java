@@ -66,7 +66,7 @@ public class Principal {
 						TECLADO.close(); return;
 					
 					// Se ha introducido una opción fuera de las contempladas
-					default: System.out.println("Opción seleccionada inválida");
+					default: System.err.println("Opción seleccionada inválida");
 				}
 				
 			} catch (InputMismatchException e) {
@@ -75,7 +75,11 @@ public class Principal {
 				
 			} catch (IllegalArgumentException e) {
 				System.err.println(e.getMessage());
+			} catch (Exception e) {
+				System.err.println("Error inesperado, se finalizará el programa.");
+				return ;
 			}
+
 		}
 
 	}
