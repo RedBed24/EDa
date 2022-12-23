@@ -45,9 +45,13 @@ public class Asiento {
 	
 	public boolean liberar(final String identificadorOcupante) { 
 		// TODO: Creo que es conveniente tener una forma de liberar un asiento y no quedar permanenetemente ocupado en la misma ejecución.
-		if (!ocupado) return true; /* throw new IllegalStateException("Error, el asiento ya está libre."); */
+		// Yo también lo veo necesario, pero si le pasamos el identificador, supongo que será porque queremos que se libere si el ideintificador pasado es el del atirbuto
+		// También entiendo que si llamas a liberar, esperas que te devuelva true si se ha podido liberar, ¿no? Por ello he cambiado los returns
+		if (isLibre()) return false; // tenemos una función para comprobar si está libre, no tenemos porqué pensar en contario (aunque sí, es mas eficiente de la otra forma, pero prima más que se pueda leer)
+		if (!this.identificadorOcupante.equals(identificadorOcupante)) return false; // si no coinciden los identificadores
+		
 		this.identificadorOcupante = null;
-		return ocupado = false; // Devuelve que no está ocupado (está libre) = !ocupado
+		return !(ocupado = false); // Devuelve que se ha podido liberar correctamente
 	}
 	
 	public boolean equals(Object obj) {

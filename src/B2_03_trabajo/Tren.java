@@ -86,6 +86,13 @@ public class Tren {
 		// TODO: Quizás, este método puede devolver otra cosa más que un boolean y mensaje = null es equivalente a una excepción o lo que sea.
 	}
 	
+	public String liberarAsiento(final String identificadorOcupante) {
+		for (Vagón vagón : vagones)
+			if (!vagón.liberarAsiento(identificadorOcupante))
+				return "Error."; // Uso String simplemente por consistencia con el otro, pero vamos que yo aquí usaba excepciones.
+		return "Se ha eliminado la reserva del asiento con el identificador \"" + identificadorOcupante + "\" correctamente.";
+	}
+	
 	public int numPasajeros() { 
 		// El número de pasajeros del tren es la suma de todos los asientos ocupados de cada vagón
 		int pasajeros = 0;

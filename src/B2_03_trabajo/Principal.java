@@ -17,8 +17,9 @@ public class Principal {
 		menú(tren);
 		System.out.println(tren);
 	}
+
 	public static void menú(Tren tren) {
-		
+		String identificador;
 		while (true) { 
 			try {
 				// Muestra del menú
@@ -52,7 +53,7 @@ public class Principal {
 					
 					// liberarAsiento
 					case 6:
-						System.out.println();
+						System.out.println(tren.liberarAsiento(TECLADO.next());
 						break;
 					
 					// TODO: Añadir vagón¿?

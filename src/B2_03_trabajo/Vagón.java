@@ -71,9 +71,9 @@ public class Vagón {
 	public boolean liberarAsiento(final String identificadorOcupante) {
 		for (Asiento[] fila : asientos)
 			for (Asiento asiento : fila)
-				if (!asiento.liberar(identificadorOcupante)) { // Devuelve false porque ocupado = false. Entonces hay que hacer al revés para que se cumpla el if en esos casos.
+				if (asiento.liberar(identificadorOcupante)) { // creo que era lioso antes, tiene más sentido pensar (por lo menos para mí) que liberar te va a devolver si se ha podido liberar o no
 					asientosOcupados--;
-					return true; // Devuelve que se libera el asiento
+					return true; // Devuelve que se libera el asiento (al igual que liberar de asiento, por consistencia)
 				}
 		return false;
 	}
