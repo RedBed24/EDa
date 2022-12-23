@@ -48,17 +48,27 @@ public class Principal {
 						
 					// reservarAsiento
 					case 5:
-						System.out.println(tren.reservarAsiento("Hola"));
+						System.out.println("Introduzca un identificador para la compra de un asientos.");
+						System.out.println(tren.reservarAsiento(TECLADO.next()));
 						break;
 					
 					// liberarAsiento
 					case 6:
+						System.out.println("Introduzca el identificador del asiento a liberar.");
 						System.out.println(tren.liberarAsiento(TECLADO.next());
 						break;
 					
-					// TODO: Añadir vagón¿?
-					case 7: 
-						System.out.println();
+					// TODO: Añadir vagón¿? Se añaden automáticamente al llenar uno
+					// Nos piden reservar x asientos
+					case 7:
+						System.out.println("Introduzca un identificador para la compra de varios asientos, se le añadirá automáticamente un número para diferenciarlos.");
+						identificador = TECLADO.next();
+						System.out.println("Introduzca la cantidad de reservas que quiera realizar.");
+						final int reservas = TECLADO.nextInt();
+						for (int i = 0; i < reservas; i++)
+							// igual es muy redundante el sysout y deberíamos controlar el caso de null
+							System.out.println(tren.reservarAsiento(identificador+i));
+						System.out.println("Se han realizado " + reservas + " reservas.");
 						break;
 						
 					// Opción de salida	
