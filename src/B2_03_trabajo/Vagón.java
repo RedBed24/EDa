@@ -7,6 +7,7 @@ package B2_03_trabajo;
 * 
 * @description Contiene la información acerca de los vagones, tanto sus características como los métodos que los manejan.
 * 			   Los atributos son el número de filas y columnas, el número de vagón... Sin acabar. Primero, se termina y luego se comenta.
+* 			   Un vagón es una colección de asientos posicionados en filas y en 4 columnas
 ***********************************************************************/
 
 public class Vagón {
@@ -18,6 +19,14 @@ public class Vagón {
 	final private int asientosTotales; 
 	private int asientosOcupados = 0;
 
+	/**
+	 * Constructor de Vagón. Permite crear un vagón especificando un número para este y un número de filas.
+	 * Crea todos los asientos vacíos.
+	 * @param numVagón --> Número del vagón que identifica a este.
+	 * @param numFilas --> Número de filas que tendrá el vagón. rango: [1, ?)
+	 * 
+	 * @throws IllegalArgumentException --> Si el número de filas es 0 o menor.
+	 */
 	public Vagón(final int numVagón, final int numFilas) {
 		super();
 		this.numVagón = numVagón;
@@ -42,32 +51,82 @@ public class Vagón {
 		return numVagón;
 	}
 
+	/**
+	 * Permite obtener el número de asientos que componen este vagón
+	 * @return entero que representa el tamaño de la colección de asientos. rango: (0, ?)
+	 */
 	public int getAsientosTotales() {
 		return asientosTotales;
 	}
 
+	/**
+	 * Permite obtener el número de Asientos que se encuentran actualmente ocupados en este vagón.
+	 * @return entero que representa la cantidad de asientos ocupados. rango: [0, asientosTotales]
+	 */
 	public int getAsientosOcupados() {
 		return asientosOcupados;
 	}
 
+	/**
+	 * Permite obtener el número de Asietnos que se encuentran actualmente libres en este vagón.
+	 * @return entero que representa la cantidad de asietnos libres. rango: [0, asientosTotales]
+	 */
 	public int getAsientosLibres() {
 		return asientosTotales - asientosOcupados;
 	}
 	
-	public boolean reservarAsiento(final String identificadorOcupante) {
+	/**
+	 * Permite saber si el vagón está completamente lleno, esto es si todos los asientos están ocupados.
+	 * @return true: Si está lleno. false: Si hay al menos 1 asiento libre.
+	 */
+	public boolean isLleno() {
+		return asientosTotales== asientosOcupados;
+	}
+	
+	/**
+	 * Permite saber si el vagón está completamente vacío, esto es si todos los asientos están libres.
+	 * @return true: Si está vacio. false: Si al menos 1 asiento está ocupado
+	 */
+	public boolean isVacio() {
+		return asientosOcupados== 0;
+	}
+	
+	/**
+	 * Permite saber si el vagón contiene algún asiento con el identificador dado.
+	 * @param identificadorOcupante --> Identificador a buscar en el vagón.
+	 * @return true: Si el vagón contiene un asiento con este identificiador. false: Si el vagón no contiene un asiento con el identificador.
+	 */
+	public boolean identificadorEnUso(final String identificadorOcupante) {
+		// TODO: Sería necesario comprobar si es null
 		for (Asiento[] fila : asientos)
 			for (Asiento asiento : fila)
-				if (asiento.reservar(identificadorOcupante)) { // Si está ocupado TODO: curioso que no sea isOcupado(). Se concluye que reservarAsiento de Asiento es un setter
+				if (asiento.isOcupado() && asiento.getIdentificadorOcupante().equals(identificadorOcupante))
+					return true;
+		return false;
+	}
+
+	/**
+	 * Permite reservar un asiento con el identificador provisto. Se elige en orden de filas y columnas.
+	 * @param identificadorOcupante --> Identificador que ocupará el asiento
+	 * @return true: Si se ha podido reservar un asiento. false: Si no quedaba hueco
+	 */
+	public boolean reservarAsiento(final String identificadorOcupante) {
+		// TODO: Comprobar si ya existe un asiento con este identificador?
+		// se podría hacer en este mismo bucle, por ahorrar iteraciones
+		for (Asiento[] fila : asientos)
+			for (Asiento asiento : fila)
+				if (asiento.reservar(identificadorOcupante)) {
 					asientosOcupados++;
 					return true; // Devuelve que se reserva el asiento
 				}
 		return false;
 	}
-	/* TODO: qué decidimos? Hacer reservarAsiento y liberarAsiento o reservarAsiento y !reservarAsiento? Mi opinión es la siguiente:
-	 * 
-	 * Para un programa normal, yo no haría estas cosas de crear dos métodos para funciones booleanas, es decir, reservarAsiento
-	 * y liberarAsiento ya que hacen lo contrario. Pondría reservarAsiento y !reservarAsiento. Sin embargo, para un TAD creo que
-	 * es imprescindible hacer este tipo de cosas. No sé qué opinaréis pero conviene dejar esto claro */
+	
+	/**
+	 * Permite liberar el asiento que tenga el Identificador dado.
+	 * @param identificadorOcupante --> Identificador del asiento a liberar
+	 * @return true: Si se ha podido liberar un asiento, false: Si niguno de los asientos se ha podido liberar
+	 */
 	public boolean liberarAsiento(final String identificadorOcupante) {
 		for (Asiento[] fila : asientos)
 			for (Asiento asiento : fila)
