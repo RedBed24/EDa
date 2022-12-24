@@ -11,12 +11,20 @@ import java.util.List;
 * @description Contiene la información acerca del tren, tanto sus características como los métodos que los manejan.
 * 			   Sin acabar
 ***********************************************************************/
-// TODO: Nada nuevo
+
 public class Tren {
 	final private List<Vagón> vagones;
 	final private int numMáxVagones;
 	final private int numFilasVagón;
 
+	/**
+	 * Permite crear un nuevo tren con un número máximo de vagones especificado y un número de filas por vagón también especificado.
+	 * @param numMáxVagones --> Número máximo de vagones que puede tener el tren. rango: [1, ?)
+	 * @param numFilasVagón --> Número de filas que contiene cada vagón. rango: [1, ?)
+	 * 
+	 * @throws IllegalArgumentException --> Si el número de vagones especificado es igual o menor que 0
+	 * @throws IllegalArgumentException --> Si el número de filas especificado es igual o menor que 0
+	 */
 	public Tren(final int numMáxVagones, final int numFilasVagón) {
 		super();
 		if ((this.numMáxVagones = numMáxVagones) <= 0) throw new IllegalArgumentException("El tren debe tener al menos un vagón.");
@@ -50,6 +58,7 @@ public class Tren {
 			libres += vagón.getAsientosLibres();
 		return libres;
 	}
+
 	public int ocupadosTren() { 
 		// El número de asientos ocupados del tren es igual a la suma de asientos ocupados de cada vagón del tren.
 		int ocupados = 0;
@@ -57,7 +66,27 @@ public class Tren {
 			ocupados += vagón.getAsientosOcupados();
 		return ocupados;
 	}
+
+	public int numPasajeros() { 
+		// El número de pasajeros del tren es la suma de todos los asientos ocupados de cada vagón
+		int pasajeros = 0;
+		for(Vagón vagón: vagones)
+			pasajeros += vagón.getAsientosOcupados();
+		return pasajeros;
+	}
 	
+	/**
+	 * Permite saber si el tren contiene algún asiento con el identificador dado.
+	 * @param identificadorOcupante --> Identificador a buscar en el tren.
+	 * @return true: Si el tren contiene un asiento con este identificiador. false: Si el tren no contiene un asiento con el identificador.
+	 */
+	public boolean identificadorEnUso(final String identificadorOcupante) {
+		for (Vagón vagón : vagones)
+			if (vagón.identificadorEnUso(identificadorOcupante)) return true;
+		
+		return false;
+	}
+
 	public String reservarAsiento(final String identificadorOcupante) {
 		String mensaje = "";
 		
@@ -93,26 +122,20 @@ public class Tren {
 		return "Se ha eliminado la reserva del asiento con el identificador \"" + identificadorOcupante + "\" correctamente.";
 	}
 	
-	public int numPasajeros() { 
-		// El número de pasajeros del tren es la suma de todos los asientos ocupados de cada vagón
-		int pasajeros = 0;
-		for(Vagón vagón: vagones)
-			pasajeros += vagón.getAsientosOcupados();
-		return pasajeros; /* TODO: el ejercicio pide que añadamos explícitamente 3 operaciones:
-		 						numPasajeros, trenLleno y reservarAsiento. Tmb dice que añadamos todo lo que haga un TAD
-		 						completo y útil. Pensemos en más métodos y/o pasemos ya al menú en sí y realizar el resto.
-		 						Tmb puede ser que conforme hagamos el trabajo nos surjan ideas de nuevos métodos, incluso
-		 						nuevos atributos.*/
-	}
-	
-	public boolean trenLleno() { 
+	public boolean isLleno() { 
 		// Ningún asiento está libre
 		for (Vagón vagón : vagones)
-			if (vagón.getAsientosLibres() != 0) return false;
+			if (!vagón.isLleno()) return false;
 		
 		// No se pueden añadir más vagones al tren
 		return vagones.size()+1 < numMáxVagones;
-
+	}
+	
+	public boolean isVacio() {
+		for (Vagón vagón : vagones)
+			if (!vagón.isVacio()) return false;
+		
+		return true;
 	}
 	
 	public String toString() {
