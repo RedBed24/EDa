@@ -38,20 +38,16 @@ public class Asiento {
 	}
 	
 	public boolean reservar(final String identificadorOcupante) {
-		if (ocupado) return false; /* throw new IllegalStateException("Error, el asiento ya está ocupado."); */
+		if (isOcupado()) return false;
 		this.identificadorOcupante = identificadorOcupante;
-		return ocupado = true; // Devuelve que está ocupado = ocupado
+		return ocupado = true; // Devuelve que está ocupado tras reservar -> ocupado
 	}
-	
-	public boolean liberar(final String identificadorOcupante) { 
-		// TODO: Creo que es conveniente tener una forma de liberar un asiento y no quedar permanenetemente ocupado en la misma ejecución.
-		// Yo también lo veo necesario, pero si le pasamos el identificador, supongo que será porque queremos que se libere si el ideintificador pasado es el del atirbuto
-		// También entiendo que si llamas a liberar, esperas que te devuelva true si se ha podido liberar, ¿no? Por ello he cambiado los returns
-		if (isLibre()) return false; // tenemos una función para comprobar si está libre, no tenemos porqué pensar en contario (aunque sí, es mas eficiente de la otra forma, pero prima más que se pueda leer)
-		if (!this.identificadorOcupante.equals(identificadorOcupante)) return false; // si no coinciden los identificadores
-		
+
+	public boolean liberar(final String identificadorOcupante) {
+		if (isLibre()) return false;
+		if (!this.identificadorOcupante.equals(identificadorOcupante)) return false; // No es el asiento a liberar
 		this.identificadorOcupante = null;
-		return !(ocupado = false); // Devuelve que se ha podido liberar correctamente
+		return !(ocupado = false); // Devuelve que no está ocupado tras liberar -> !ocupado
 	}
 	
 	public boolean equals(Object obj) {
@@ -61,8 +57,7 @@ public class Asiento {
 		return Objects.equals(identificadorOcupante, ((Asiento)obj).getIdentificadorOcupante());
 	}
 	
-	public String toString() {
+	public String toString() { // En caso de que no se muestren los colores correctamente, pruebe a instalar desde el menú Help > Eclipse Marketplace la extensión ANSI Escape in Console
 		return (ocupado ? "\033[31mOcupado\u001B[0m" : "\033[32mLibre\u001B[0m  ");
 	}
-
 }

@@ -89,14 +89,14 @@ public class Tren {
 
 	public String reservarAsiento(final String identificadorOcupante) {
 		String mensaje = "";
-		
 		// Si el tren está lleno...
 		if(libresTren() == 0) {
-			if(vagones.size()+1 >= numMáxVagones) // ...y no se pueden añadir más vagones, regresa un valor nulo.
-				mensaje = null; // Este caso es equivalente a if(trenlleno()) mensaje = null;
+			if(vagones.size() >= numMáxVagones) // ...y no se pueden añadir más vagones, regresa un valor nulo.
+				throw new IllegalArgumentException("Error al realizar la reserva. El tren está completamente lleno");
 			else {	// ...y se pueden añadir más vagones, se añade un vagón más y se realiza la reserva
-				vagones.add(new Vagón(vagones.size(), numFilasVagón));	
+				vagones.add(new Vagón(vagones.size()+1, numFilasVagón));	
 				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
+				mensaje = "<Reserva realizada correctamente>";
 			}
 		} 
 		// Si el tren tiene algún asiento libre...
@@ -107,19 +107,16 @@ public class Tren {
 				if (menosLleno.getAsientosLibres() < vagón.getAsientosLibres())
 					menosLleno = vagón;
 			// Y se realiza la reserva del asiento.
-			if (menosLleno.reservarAsiento(identificadorOcupante)) mensaje = "Éxito";
-			else mensaje = null;
+			if (menosLleno.reservarAsiento(identificadorOcupante)) mensaje = "<Reserva realizada correctamente>";
+			else throw new IllegalArgumentException("Error al realizar la reserva");
 		}
-
-		return mensaje; 
-		// TODO: Quizás, este método puede devolver otra cosa más que un boolean y mensaje = null es equivalente a una excepción o lo que sea.
+		return mensaje;
 	}
 	
 	public String liberarAsiento(final String identificadorOcupante) {
 		for (Vagón vagón : vagones)
-			if (!vagón.liberarAsiento(identificadorOcupante))
-				return "Error."; // Uso String simplemente por consistencia con el otro, pero vamos que yo aquí usaba excepciones.
-		return "Se ha eliminado la reserva del asiento con el identificador \"" + identificadorOcupante + "\" correctamente.";
+			if (!vagón.liberarAsiento(identificadorOcupante)) throw new IllegalArgumentException("Error al liberar el asiento de \"" + identificadorOcupante+"\"");
+		return "Se han eliminado las reservas de \"" + identificadorOcupante + "\" correctamente.";
 	}
 	
 	public boolean isLleno() { 
@@ -128,7 +125,7 @@ public class Tren {
 			if (!vagón.isLleno()) return false;
 		
 		// No se pueden añadir más vagones al tren
-		return vagones.size()+1 < numMáxVagones;
+		return vagones.size() >= numMáxVagones;
 	}
 	
 	public boolean isVacio() {
@@ -138,11 +135,21 @@ public class Tren {
 		return true;
 	}
 	
+	public String mostrarOcupantesTren() {
+		String devolver="----------------------<TREN>----------------------";
+		for (Vagón vagón : vagones)
+			devolver+= "\n"+vagón.mostrarOcupantesVagón();
+		return devolver;
+	}
+	
 	public String toString() {
-		String devolver="Tren";
+		String devolver="----------------------<TREN>----------------------";
 		for (Vagón vagón : vagones)
 			devolver+= "\n"+vagón;
 		return devolver;
 	}
+	
+
+
 	
 }
