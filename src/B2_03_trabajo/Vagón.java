@@ -24,7 +24,6 @@ public class Vagón {
 	 * @param numVagón --> Número del vagón que identifica a este.
 	 * @param numFilas --> Número de filas que tendrá el vagón. rango: [1, ?)
 	 * 
-	 * @throws ProblemInTrainException --> Si el número de filas es 0 o menor.
 	 */
 	public Vagón(final int numVagón, final int numFilas) {
 		super();
@@ -148,6 +147,13 @@ public class Vagón {
 	
 	public String getIDAsiento(int filaAsiento, int columnaAsiento) {
 		return asientos[filaAsiento][columnaAsiento].getIdentificadorOcupante();
+	}
+	
+	public void setIDAsiento(String antiguoOcupante, String nuevoOcupante) {
+		for(int i = 0; i < asientos.length; i++)
+			for(int j = 0; j < asientos[i].length; j++)
+				if(asientos[i][j].isOcupado() && asientos[i][j].getIdentificadorOcupante().startsWith(antiguoOcupante))
+						asientos[i][j].setIdentificadorOcupante(nuevoOcupante);
 	}
 	
 	public String toString() {
