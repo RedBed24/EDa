@@ -7,12 +7,12 @@ import java.util.Objects;
 * @authors DJS - B2 - 03
 * @description Contiene la información acerca de los asientos, tanto sus características como los métodos que los manejan.
 * Los atributos son el identificador del ocupante y si está ocupado o no.
-* Los métodos son el constructor vacío, los getters (getIdentificadorOcupante(), isOcupado(), isLibre()), los
-* setters (setIdentificadorOcupante(String), reservarAsiento(String), liberarAsiento(String)), el equals y el toString.
+* Los métodos son dos constructores, los getters (getIdentificadorOcupante(), isOcupado(), isLibre()), los
+* setters (setIdentificadorOcupante, reservar, liberar), el equals y el toString.
 ***********************************************************************/
 public class Asiento {
 	
-	private Boolean ocupado = false; // Ocupación de un asiento: ocupado o libre
+	private boolean ocupado = false; // Ocupación de un asiento: ocupado o libre
 	private String identificadorOcupante = null; // Identificador del ocupante del asiento
 	
 	/**
@@ -35,7 +35,7 @@ public class Asiento {
 	/** 
 	 * @name getIdentificadorOcupante
 	 * @description Devuelve el identificador del ocupante del asiento
-	 * @return identificadorOcupante
+	 * @return Identificador del ocupante
 	 */
 	public String getIdentificadorOcupante() {
 		return identificadorOcupante;
@@ -44,7 +44,7 @@ public class Asiento {
 	/** 
 	 * @name setIdentificadorOcupante
 	 * @description Modifica el identificador del ocupante del asiento
-	 * @param identificadorOcupante -> Ocupante del asiento
+	 * @param identificadorOcupante -> Nuevo identificador del ocupante del asiento
 	 */
 	public void setIdentificadorOcupante(String identificadorOcupante) {
 		this.identificadorOcupante = identificadorOcupante;
@@ -72,7 +72,7 @@ public class Asiento {
 	 * @name reservar
 	 * @description Reserva el asiento si está libre. Guarda el identificador del ocupante y 
 	 * registra que, ahora, el asiento está ocupado
-	 * @param identificadorOcupante -> Ocupante del asiento
+	 * @param identificadorOcupante -> Identificador del ocupante del asiento
 	 * @return El asiento está ocupado, después de haberlo reservado
 	 */
 	public boolean reservar(final String identificadorOcupante) {
@@ -114,6 +114,6 @@ public class Asiento {
 	 * @return Cadena con la ocupación del asiento
 	 */
 	public String toString() { // En caso de que no se muestren los colores correctamente, pruebe a instalar desde el menú Help > Eclipse Marketplace la extensión ANSI Escape in Console
-		return (ocupado ? "\033[31mOcupado\u001B[0m" : "\033[32mLibre\u001B[0m  ");
+		return (ocupado ? "\033[31mOcupado\u001B[0m" : "\033[32mLibre\u001B[0m  "); // Ocupado en color rojo y Libre en color verde
 	}
 }
