@@ -24,12 +24,12 @@ public class Vagón {
 	 * @param numVagón --> Número del vagón que identifica a este.
 	 * @param numFilas --> Número de filas que tendrá el vagón. rango: [1, ?)
 	 * 
-	 * @throws IllegalArgumentException --> Si el número de filas es 0 o menor.
+	 * @throws ProblemInTrainException --> Si el número de filas es 0 o menor.
 	 */
 	public Vagón(final int numVagón, final int numFilas) {
 		super();
 		this.numVagón = numVagón;
-		if ((this.nFilas = numFilas) <= 0) throw new IllegalArgumentException("El vagón debe tener al menos una fila.");
+		this.nFilas = numFilas;
 		this.asientosTotales = nFilas*nColumnas;
 		
 		this.asientos = new Asiento[nFilas][nColumnas];
@@ -38,7 +38,7 @@ public class Vagón {
 				asientos[i][j]= new Asiento();
 	}
 	
-	public static int getColumnas() {
+	public int getColumnas() {
 		return nColumnas;
 	}
 	
@@ -95,11 +95,11 @@ public class Vagón {
 	 * @return true: Si el vagón contiene un asiento con este identificiador. false: Si el vagón no contiene un asiento con el identificador.
 	 */
 	public boolean identificadorEnUso(final String identificadorOcupante) {
-		if(identificadorOcupante == null) throw new IllegalArgumentException("El identificador null es inválido");
 		for (Asiento[] fila : asientos)
-			for (Asiento asiento : fila)
+			for (Asiento asiento : fila) {
 				if (asiento.isOcupado() && asiento.getIdentificadorOcupante().equals(identificadorOcupante))
 					return true;
+			}
 		return false;
 	}
 	
@@ -109,8 +109,6 @@ public class Vagón {
 	 * @return true: Si se ha podido reservar un asiento. false: Si no quedaba hueco
 	 */
 	public boolean reservarAsiento(final String identificadorOcupante) {
-		// TODO: Comprobar si ya existe un asiento con este identificador?
-		// se podría hacer en este mismo bucle, por ahorrar iteraciones
 		for (Asiento[] fila : asientos)
 			for (Asiento asiento : fila)
 				if (asiento.reservar(identificadorOcupante)) {
@@ -134,7 +132,7 @@ public class Vagón {
 	
 	public String mostrarOcupantesVagón() {
 		String devolver = "<VAGÓN "+ numVagón+ ">\tCuenta con "+ getAsientosLibres()+" asientos libres\n\n               ";
-		devolver+= "       Izquierda        Derecha\nFila |   Ventana   |           Pasillo         |   Ventana   |\n     -----------------------------------------";
+		devolver+= "       Izquierda        Derecha\nFila |   Ventana   |           Pasillo         |   Ventana   |\n     ---------------------------------------------------------------";
 		for (int i = 0; i < asientos.length; i++) {
 			devolver+= String.format("\n%-5d| " , i+1);
 
@@ -145,12 +143,16 @@ public class Vagón {
 					devolver += String.format("\033[31m%-12s\u001B[0m| ",asientos[i][j].getIdentificadorOcupante());
 
 		}
-		return devolver+"\n     -----------------------------------------";
+		return devolver+"\n     ---------------------------------------------------------------";
+	}
+	
+	public String getIDAsiento(int filaAsiento, int columnaAsiento) {
+		return asientos[filaAsiento][columnaAsiento].getIdentificadorOcupante();
 	}
 	
 	public String toString() {
 		String devolver = "<VAGÓN "+ numVagón+ ">\tCuenta con "+ getAsientosLibres()+" asientos libres\n\n               ";
-		devolver+= " Izquierda  Derecha\nFila | Ventana |      Pasillo      | Ventana |\n     -----------------------------------------";
+		devolver+= " Izquierda  Derecha\nFila | Ventana |      Pasillo      | Ventana |\n     -----------------------------------";
 		for (int i = 0; i < asientos.length; i++) {
 			devolver+= String.format("\n%-5d| " , i+1);
 
@@ -158,7 +160,7 @@ public class Vagón {
 				devolver += asientos[i][j]+" | ";
 
 		}
-		return devolver+"\n     -----------------------------------------";
+		return devolver+"\n     -----------------------------------";
 	}
 	
 }
