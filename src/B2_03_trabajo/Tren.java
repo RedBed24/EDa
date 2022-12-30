@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*********************************************************************
-* @name Tren
-* @authors DJS - B2 - 03
-* @description Contiene la información acerca del tren, tanto sus características como los métodos que los manejan.
+* Contiene la información acerca del tren, tanto sus características como los métodos que los manejan.
 * Los atributos son una lista de vagones, el número máximo de vagones que puede tener el tren y el número de filas que contiene cada vagón.
 * Los métodos son el constructor, los getters (getNumVagones, getNumMáxVagones, getFilasVagones, getColumnasVagones, getIdentificadorAsientoVagón),
 * operaciones relacionadas con parámetros generales del tren (capacidadTren, capacidadVagón, libresActualmente, libresTren, ocupadosTren, isLleno,
@@ -20,8 +18,7 @@ public class Tren {
 	final private int numFilasVagón; // Número de filas por vagón
 
 	/**
-	 * @name Constructor de Tren
-	 * @description Crea un tren especificando su número máximo de vagones y la cantidad de filas por vagón. Inicialmente,
+	 * Crea un tren especificando su número máximo de vagones y la cantidad de filas por vagón. Inicialmente,
 	 * un tren dispondrá de un vagón.
 	 * @param numMáxVagones -> Número máximo de vagones que puede tener el tren - Rango: [1, ?)
 	 * @param numFilasVagón ->  Número de filas que contiene cada vagón - Rango: [1, ?)
@@ -40,8 +37,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name getNumVagones
-	 * @description Devuelve el número de vagones que tiene el tren en un momento determinado
+	 * Devuelve el número de vagones que tiene el tren en un momento determinado
 	 * @return Número de vagones actuales
 	 */
 	public int getNumVagones() {
@@ -49,8 +45,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name getNumMáxVagones
-	 * @description Devuelve el número máximo de vagones que puede tener el tren
+	 * Devuelve el número máximo de vagones que puede tener el tren
 	 * @return Número máximo de vagones
 	 */
 	public int getNumMáxVagones() {
@@ -58,8 +53,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name getFilasVagones
-	 * @description Devuelve el número de filas por vagón
+	 * Devuelve el número de filas por vagón
 	 * @return Número de filas por vagón
 	 */
 	public int getFilasVagones() {
@@ -67,8 +61,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name getColumnasVagones
-	 * @description Devuelve el número constante de columnas para los vagones
+	 * Devuelve el número constante de columnas para los vagones
 	 * @return Número de columnas para todo vagón
 	 */
 	public int getColumnasVagones() {
@@ -76,8 +69,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name getIdentificadorAsientoVagón
-	 * @description Devuelve el identificador del asiento de un vagón en una fila y columna determinadas
+	 * Devuelve el identificador del asiento de un vagón en una fila y columna determinadas
 	 * @param numVagón -> Número de vagón donde se encuentra el asiento
 	 * @param fila -> Fila dentro del vagón indicado donde se encontrará el asiento
 	 * @param posición -> Columna dentro de la fila del vagón indicado donde el asiento se encuentra (VentanaIzq, PasilloIzq, PasilloDer, VentanaDer)
@@ -112,8 +104,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name setIdentificadorAsientoVagón
-	 * @description Modifica los identificadores de los asientos de cada vagón que estén reservados por la misma persona
+	 * Modifica los identificadores de los asientos de cada vagón que estén reservados por la misma persona
 	 * @param antiguoOcupante -> Identificador de quien ocupa el asiento, necesario para encontrar el asiento a modificar
 	 * @param nuevoOcupante -> Nuevo identificador del asiento encontrado
 	 * @throws IllegalArgumentException -> Si se pretende modificar un identificador que no existía en el tren
@@ -128,8 +119,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name capacidadVagón
-	 * @description Devuelve la capacidad de cada vagón. El número de asientos totales del vagón es el número de filas por el de columnas
+	 * Devuelve la capacidad de cada vagón. El número de asientos totales del vagón es el número de filas por el de columnas
 	 * @return Asientos totales de cada vagón. Se da por hecho que todos los vagones tienen las mismas características dentro del tren.
 	 */
 	public int capacidadVagón() { 
@@ -137,8 +127,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name capacidadTren
-	 * @description Devuelve la capacidad del tren. El número de asientos totales del tren es la capacidad de un vagón por el número máximo de vagones
+	 * Devuelve la capacidad del tren. El número de asientos totales del tren es la capacidad de un vagón por el número máximo de vagones
 	 * @return Capacidad total del tren, independientemente de los vagones actuales
 	 */
 	public int capacidadTren() { 
@@ -146,8 +135,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name libresActualmente
-	 * @description Devuelve el número de asientos que hay libres en el tren en un momento determinado.
+	 * Devuelve el número de asientos que hay libres en el tren en un momento determinado.
 	 * El número de asientos libres del tren en un momento determinado es igual a la suma de asientos libres de cada vagón (de los actuales).
 	 * @return Asientos libres actualmente, sin tener en cuenta el número máximo de vagones
 	 */
@@ -159,8 +147,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name libresTren
-	 * @description Devuelve el número de asientos que hay libres en el tren, teniendo en cuenta el número máximo de vagones.
+	 * Devuelve el número de asientos que hay libres en el tren, teniendo en cuenta el número máximo de vagones.
 	 * El número de asientos libres del tren es la diferencia entre la capacidad del tren y los asientos que haya ocupados
 	 * @return Número de asientos libres 
 	 */
@@ -169,8 +156,7 @@ public class Tren {
 	}
 
 	/**
-	 * @name ocupadosTren
-	 * @description Devuelve el número de asientos que están ocupados en el tren. Este es diferente a los métodos anteriores porque
+	 * Devuelve el número de asientos que están ocupados en el tren. Este es diferente a los métodos anteriores porque
 	 * los vagones se añaden según vayan llenándose estos, es decir, cuando se ocupen en su totalidad y sean necesarios más asientos.
 	 * Estrictamente, este método sería el opuesto a libresActualmente() porque indica los asientos ocupados en un momento determinado,
 	 * pero para este TAD, es irrelevante. El número de asientos ocupados del tren es la suma de asientos ocupados de cada vagón del tren
@@ -184,8 +170,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name isLleno
-	 * @description Devuelve si el tren está totalmente lleno. Esto es, si ningún asiento está libre y no se pueden añadir más vagones al tren
+	 * Devuelve si el tren está totalmente lleno. Esto es, si ningún asiento está libre y no se pueden añadir más vagones al tren
 	 * @return true si el tren está completamente lleno, false en otro caso 
 	 */
 	public boolean isLleno() { 
@@ -197,8 +182,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name isVacio
-	 * @description Devuelve si el tren está totalmente vacío. Esto es, si todo asiento está libre
+	 * Devuelve si el tren está totalmente vacío. Esto es, si todo asiento está libre
 	 * @return true si el tren está completamente vacío, false en otro caso 
 	 */
 	public boolean isVacio() {
@@ -208,8 +192,7 @@ public class Tren {
 	}
 
 	/**
-	 * @name identificadorEnUso
-	 * @description Permite saber si el tren contiene algún asiento con el identificador dado. Se comprueba tanto el identificador
+	 * Permite saber si el tren contiene algún asiento con el identificador dado. Se comprueba tanto el identificador
 	 * literal como el identificador con un 1 delante. Esto es debido a que si se desean reservar varios asientos, necesitamos una manera
 	 * de distinguir los billetes diferentes y se exige que sea con el nombre del ocupante y el número de billete delante. Si existe el
 	 * identificador compuesto por el nombre del ocupante y el primer billete, significa que dicho nombre está contenido en algún asiento.
@@ -229,8 +212,7 @@ public class Tren {
 	}
 
 	/**
-	 * @name reservarAsiento
-	 * @description Realiza la reserva de uno o varios asientos
+	 * Realiza la reserva de uno o varios asientos
 	 * @param identificadorReal -> Identificador real del ocupante que realiza la reserva
 	 * @return Mensaje de confirmación de reservas exitosas
 	 * @throws IllegalArgumentException -> Si el identificador es igual a null o comienza por null, en caso de que el número de reservas sea
@@ -288,8 +270,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name liberarAsiento
-	 * @description Se liberan todos los asientos que correspondan a la misma persona
+	 * Se liberan todos los asientos que correspondan a la misma persona
 	 * @param identificadorOcupante -> Identificador del ocupante del que se eliminarán todas sus reservas
 	 * @return Mensaje de confirmación de eliminación de reservas
 	 * @throws IllegalArgumentException -> Si el ocupante correspondiente no tenía ninguna reserva en el tren
@@ -308,8 +289,7 @@ public class Tren {
 	}
 	
 	/***********************************
-	 * @name comprobarIdentificador
-	 * @description Comprueba un identificador al usuario
+	 * Comprueba un identificador al usuario
 	 * @throws IllegalArgumentException -> Lanzada si se indica un identificador que termina en número o null
 	 ***********************************/
 	public String comprobarIdentificador(String identificador) {
@@ -323,8 +303,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name mostrarOcupantesTren
-	 * @description Devuelve una cadena con la disposición del tren, es decir, cada uno de sus vagones y, además, con
+	 * Devuelve una cadena con la disposición del tren, es decir, cada uno de sus vagones y, además, con
 	 * los identificadores de todos los ocupantes del mismo. En el fondo, es un toString() secundario o mejorado
 	 * @return Cadena con la información del tren, su disposición y los identificadores de todos sus ocupantes
 	 */
@@ -336,8 +315,7 @@ public class Tren {
 	}
 	
 	/**
-	 * @name toString
-	 * @description Devuelve una cadena con la disposición del tren, es decir, cada uno de sus vagones y, además, con
+	 * Devuelve una cadena con la disposición del tren, es decir, cada uno de sus vagones y, además, con
 	 * la ocupación de todos los asientos. Se recomienda ver el toString() de Vagón para entender por qué consideramos este método
 	 * como método toString() principal
 	 * @return Cadena con la información del tren, su disposición y la ocupación de todos sus asientos

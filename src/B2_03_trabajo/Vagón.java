@@ -1,11 +1,7 @@
 package B2_03_trabajo;
 
 /*********************************************************************
-* @name Vagón
-* 
-* @authors DJS - B2 - 03
-* 
-* @description Contiene la información acerca de los vagones, tanto sus características como los métodos que los manejan.
+* Contiene la información acerca de los vagones, tanto sus características como los métodos que los manejan.
 * Los atributos son el número de filas y columnas, el número de vagón, la matriz de asientos, los asientos totales y los asientos ocupados.
 * Los métodos son el constructor, los getters (getColumnas, getFilas, getNumVagón, getAsientosTotales, getAsientosOcupados, getAsientosLibres),
 * operaciones para conocer el estado del vagón (isLleno, isVacio), operaciones relacionadas con identificadores de asientos 
@@ -23,8 +19,7 @@ public class Vagón {
 	private int asientosOcupados = 0; // Asientos ocupados del vagón
 
 	/**
-	 * @name Constructor de Vagón
-	 * @description Crea un vagón especificando su número identificativo y la cantidad de filas.
+	 * Crea un vagón especificando su número identificativo y la cantidad de filas.
 	 * Los asientos se crean pero sus atributos no se inicializan
 	 * @param numVagón -> Número identificativo del vagón dentro del tren
 	 * @param numFilas -> Número de filas que tendrá el vagón - Rango: [1,?)
@@ -41,8 +36,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name getColumnas
-	 * @description Devuelve el número constante de columnas para los vagones
+	 * Devuelve el número constante de columnas para los vagones
 	 * @return Número de columnas para todo vagón
 	 */
 	public int getColumnas() {
@@ -50,8 +44,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name getFilas
-	 * @description Devuelve el número de filas para los vagones
+	 * Devuelve el número de filas para los vagones
 	 * @return Número de filas del vagón
 	 */
 	public int getFilas() {
@@ -59,8 +52,7 @@ public class Vagón {
 	}
 
 	/**
-	 * @name getNumVagón
-	 * @description Devuelve el número identificativo del vagón
+	 * Devuelve el número identificativo del vagón
 	 * @return Número identificativo del vagón
 	 */
 	public int getNumVagón() {
@@ -68,8 +60,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name getAsientosTotales
-	 * @description Devuelve el número de asientos totales que tiene el vagón
+	 * Devuelve el número de asientos totales que tiene el vagón
 	 * @return Entero que representa la cantidad de asientos que hay en el vagón
 	 */
 	public int getAsientosTotales() {
@@ -77,8 +68,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name getAsientosOcupados
-	 * @description Devuelve el número de asientos que hay ocupados en el vagón
+	 * Devuelve el número de asientos que hay ocupados en el vagón
 	 * @return Entero que representa los asientos ocupados del vagón - Rango [0, asientosTotales]
 	 */
 	public int getAsientosOcupados() {
@@ -86,8 +76,7 @@ public class Vagón {
 	}
 
 	/**
-	 * @name getAsientosLibres
-	 * @description Devuelve el número de asientos libres en el vagón
+	 * Devuelve el número de asientos libres en el vagón
 	 * @return Entero que representa los asientos libres del vagón - Rango [0, asientosTotales]
 	 */
 	public int getAsientosLibres() {
@@ -95,8 +84,7 @@ public class Vagón {
 	}
 
 	/**
-	 * @name isLleno
-	 * @description Devuelve si el vagón está completamente lleno. Esto es, si todos los asientos están ocupados
+	 * Devuelve si el vagón está completamente lleno. Esto es, si todos los asientos están ocupados
 	 * @return true si la cantidad de asientos ocupados es la de los asientos totales, false en otro caso
 	 */
 	public boolean isLleno() {
@@ -104,8 +92,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name isVacio
-	 * @description Devuelve si el vagón está completamente vacío. Esto es, si ningún asiento está ocupado
+	 * Devuelve si el vagón está completamente vacío. Esto es, si ningún asiento está ocupado
 	 * @return true si la cantidad de asientos ocupados es cero, false en otro caso
 	 */
 	public boolean isVacio() {
@@ -113,8 +100,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name getIdentificadorAsiento
-	 * @description Devuelve el identificador de un asiento en concreto, especificado mediante fila y columna para
+	 * Devuelve el identificador de un asiento en concreto, especificado mediante fila y columna para
 	 * encontrarlo con la matriz de asientos
 	 * @param filaAsiento -> Fila del vagón en la que se encuentra el identificador buscado
 	 * @param columnaAsiento -> Columna del vagón en la que se sitúa el identificador buscado
@@ -125,8 +111,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name setIdentificadorAsiento
-	 * @description Modifica los identificadores de los asientos que estén reservados por la misma persona
+	 * Modifica los identificadores de los asientos que estén reservados por la misma persona
 	 * @param antiguoOcupante -> Identificador de quien ocupa el asiento, necesario para encontrar el asiento a modificar
 	 * @param nuevoOcupante -> Nuevo identificador del asiento encontrado
 	 */
@@ -138,8 +123,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name identificadorEnUso
-	 * @description Permite saber si el vagón contiene algún asiento con el identificador dado. Esto es, si al menos un asiento
+	 * Permite saber si el vagón contiene algún asiento con el identificador dado. Esto es, si al menos un asiento
 	 * del vagón está ocupado por el mismo identificador indicado por parámetro
 	 * @param identificadorOcupante -> Identificador a buscar en el vagón
 	 * @return true si el vagón contiene un asiento con este identificador, false en otro caso
@@ -153,8 +137,7 @@ public class Vagón {
 	}
 
 	/**
-	 * @name reservarAsiento
-	 * @description Permite reservar un asiento del vagón, asignando el identificador indicado por parámetro al asiento correspondiente.
+	 * Permite reservar un asiento del vagón, asignando el identificador indicado por parámetro al asiento correspondiente.
 	 * Se destaca que la reserva de los asientos dentro de los mismos vagones se realiza de forma creciente por filas y columnas.
 	 * @param identificadorOcupante -> Identificador del ocupante que reserva un asiento en el vagón
 	 * @return true si se ha reservado el asiento correctamente, false en otro caso
@@ -170,8 +153,7 @@ public class Vagón {
 	}
 
 	/**
-	 * @name liberarAsiento
-	 * @description Libera todas las reservas que correspondan al identificador indicado por parámetro.
+	 * Libera todas las reservas que correspondan al identificador indicado por parámetro.
 	 * @param identificadorOcupante -> Identificador del ocupante a buscar para liberar el asiento del vagón
 	 * @return true si se ha reservado el asiento correctamente
 	 */
@@ -184,8 +166,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name mostrarOcupantesVagón
-	 * @description Devuelve una cadena que muestra el vagón con los identificadores de todos sus ocupantes.
+	 * Devuelve una cadena que muestra el vagón con los identificadores de todos sus ocupantes.
 	 * En el fondo, es un toString() secundario o mejorado. 
 	 * @return Cadena con la información del vagón, su disposición y los identificadores de todos sus ocupantes
 	 */
@@ -206,8 +187,7 @@ public class Vagón {
 	}
 	
 	/**
-	 * @name toString
-	 * @description Devuelve una cadena que muestra el vagón con la ocupación de todos los asientos.
+	 * Devuelve una cadena que muestra el vagón con la ocupación de todos los asientos.
 	 * Consideramos este método el toString() principal pero podría ser el anterior perfectamente. El criterio a seguir para determinar cuál
 	 * de los dos métodos es el toString() principal es el punto de vista desde el que se conciba. Si es el cliente el que ejecuta el programa,
 	 * no debería poder ver la información de los demás, solo si está ocupado o no. En cambio, si es un administrador debería poder conocer

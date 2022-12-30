@@ -3,9 +3,7 @@ package B2_03_trabajo;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 /*********************************************************************
-* @name Principal
-* @authors DJS - B2 - 03
-* @description Contiene la información la función main, que dirige el flujo del programa directamente al menú principal.
+* Contiene la información la función main, que dirige el flujo del programa directamente al menú principal.
 * Es un programa de prueba para comprobar que el TAD del tren funciona correctamente. 
 ***********************************************************************/
 public class Principal {
@@ -22,8 +20,7 @@ public class Principal {
 	final static String BIENVENIDA = "\n*****************************************\n* ESTRUCTURA DE DATOS - TRABAJO TEÓRICO *\n*****************************************";
 	
 	/***********************************
-	 * @name main
-	 * @description Dirige el flujo del programa a un menú principal
+	 * Dirige el flujo del programa a un menú principal
 	 ***********************************/
 	public static void main(String[] args) {
 		// Bienvenida
@@ -33,8 +30,7 @@ public class Principal {
 	}
 
 	/***********************************
-	 * @name menú
-	 * @description Imprime el menú y procesa las consultas según la opción seleccionada por el usuario. Si es la primera vez
+	 * Imprime el menú y procesa las consultas según la opción seleccionada por el usuario. Si es la primera vez
 	 * que se invoca, pedirá al usuario que introduzca los parámetros para crear un tren inicial.
 	 * @throws IllegalArgumentException -> Captura cualquier error relacionado con el TAD del tren
 	 * @throws InputMismatchException -> Lanzada cuando se indica una opción del menú en un formato incorrecto
@@ -142,8 +138,7 @@ public class Principal {
 	}
 	
 	/***********************************
-	 * @name crearTren
-	 * @description Permite crear un tren, tanto si es la 1ª vez que se invoca el menú como si se desea generar otro con diferentes parámetros
+	 * Permite crear un tren, tanto si es la 1ª vez que se invoca el menú como si se desea generar otro con diferentes parámetros
 	 * @return Devuelve el tren creado
 	 * @throws IllegalArgumentException -> Si al crear el tren, surgió un problema: númMáxVagones <= 0 || numFilasVagón <= 0
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número máximo de vagones o el número de filas por vagón
@@ -160,8 +155,7 @@ public class Principal {
 	}
 	
 	/***********************************
-	 * @name comprarBilletes
-	 * @description Permite realizar una compra de billetes de forma secuencial, indicando identificador de la persona que los compra
+	 * Permite realizar una compra de billetes de forma secuencial, indicando identificador de la persona que los compra
 	 * y el número de asientos a reservar
 	 * @throws IllegalArgumentException -> Lanzada en caso de que tren.comprobarIdentificador y/o tren.reservarAsiento fallen
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número de asientos a reservar
@@ -183,8 +177,7 @@ public class Principal {
 	}
 	
 	/***********************************
-	 * @name imprimirParámetrosTren
-	 * @description Imprime una lista de los parámetros generales del tren. Útil para comprobar si los métodos funcionan correctamente
+	 * Imprime una lista de los parámetros generales del tren. Útil para comprobar si los métodos funcionan correctamente
 	 ***********************************/
 	public static void imprimirParámetrosTren(Tren tren) {
 		 // Parámetros fijos
@@ -205,8 +198,7 @@ public class Principal {
 	}
 	
 	/***********************************
-	 * @name consultarOcupanteAsiento
-	 * @description Permite que el usuario consulte el identificador de un asiento en concreto
+	 * Permite que el usuario consulte el identificador de un asiento en concreto
 	 * @throws IllegalArgumentException -> Si tren.getIdentificadorAsientoVagón falla
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número de vagón o la fila
 	 ***********************************/
@@ -236,8 +228,7 @@ public class Principal {
 	}
 	
 	/***********************************
-	 * @name modificarIdentificadoresDe
-	 * @description Permite que el usuario consulte el identificador de un asiento en concreto
+	 * Permite que el usuario consulte el identificador de un asiento en concreto
 	 * @throws IllegalArgumentException -> Si tren.comprobarIdentificador o tren.setIdentificadorAsientoVagón fallan
 	 ***********************************/
 	public static void modificarIdentificadoresDe(Tren tren) {
@@ -250,8 +241,7 @@ public class Principal {
 	}
 	
 	/***********************************
-	 * @name existenciaIdentificador
-	 * @description Permite saber si el identificador indicado se encuentra en el tren
+	 * Permite saber si el identificador indicado se encuentra en el tren
 	 * @throws IllegalArgumentException -> Si pedirIdentificador falla
 	 ***********************************/
 	public static void existenciaIdentificador(Tren tren) {
