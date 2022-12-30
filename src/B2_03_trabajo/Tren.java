@@ -10,8 +10,8 @@ import java.util.List;
 * Los atributos son una lista de vagones, el número máximo de vagones que puede tener el tren y el número de filas que contiene cada vagón.
 * Los métodos son el constructor, los getters (getNumVagones, getNumMáxVagones, getFilasVagones, getColumnasVagones, getIdentificadorAsientoVagón),
 * operaciones relacionadas con parámetros generales del tren (capacidadTren, capacidadVagón, libresActualmente, libresTren, ocupadosTren, isLleno,
-* isVacio), operaciones relacionadas con identificadores de asientos (identificadorEnUso,reservarAsiento, liberarAsiento, setIdentificadorAsientoVagón)
-* y métodos que muestran salidas (mostrarOcupantesTren y toString). 
+* isVacio), operaciones relacionadas con identificadores de asientos (identificadorEnUso,reservarAsiento, liberarAsiento, setIdentificadorAsientoVagón,
+* comprobarIdentificador) y métodos que muestran salidas (mostrarOcupantesTren y toString). 
 ***********************************************************************/
 
 public class Tren {
@@ -80,10 +80,34 @@ public class Tren {
 	 * @description Devuelve el identificador del asiento de un vagón en una fila y columna determinadas
 	 * @param numVagón -> Número de vagón donde se encuentra el asiento
 	 * @param fila -> Fila dentro del vagón indicado donde se encontrará el asiento
-	 * @param columna -> Columna dentro del vagón indicado donde encontraremos el asiento
+	 * @param posición -> Columna dentro de la fila del vagón indicado donde el asiento se encuentra (VentanaIzq, PasilloIzq, PasilloDer, VentanaDer)
 	 * @return Identificador del asiento del vagón "numVagón", situado en la fila "fila" y columna "columna"
+	 * @throws IllegalArgumentException -> Lanzada si el número de vagón es menor que 1 o mayor que el número de vagones actuales, 
+	 * si la fila es menor que 1 o mayor que las filas de cada vagón y si la posición es distinta a VentanaIzq, PasilloIzq, PasilloDer o VentanaDer
 	 */
-	public String getIdentificadorAsientoVagón(int numVagón, int fila, int columna) {
+	public String getIdentificadorAsientoVagón(int numVagón, int fila, String posición) {
+		int columna; // Para identificar la posición indicada en la fila
+		numVagón--; fila--; // Se resta 1 para manejar correctamente el array
+		
+		// Comprobación de número de vagón indicado por parámetro
+		if(numVagón < 0 || numVagón >= getNumVagones()) 
+			throw new IllegalArgumentException("\nNúmero de vagón excedido - Rango de vagones [1,"+getNumVagones()+"]\n");
+		
+		// Comprobación de fila indicada por parámetro
+		if(fila < 0 || fila >= getFilasVagones()) 
+			throw new IllegalArgumentException("\nNúmero de fila excedida - Rango de filas [1,"+ getFilasVagones()+"]\n");
+		
+		// Comprobación de posición indicada por parámetro
+		switch(posición.toLowerCase()) { 
+			// No importa si el usuario usa mayúsculas o minúsculas para indicar la posición aunque se le mostrará como la indique
+			case "ventanaizq": columna = 0; break;
+			case "pasilloizq": columna = 1; break;
+			case "pasilloder": columna = 2; break;
+			case "ventanader": columna = 3; break;
+			default: throw new IllegalArgumentException("\nPosición no reconocida\n");
+		}
+		
+		// Obtención y devolución del identificador de asiento especificado mediante número de vagón, fila y posición/columna
 		return vagones.get(numVagón).getIdentificadorAsiento(fila, columna);
 	}
 	
@@ -206,44 +230,59 @@ public class Tren {
 
 	/**
 	 * @name reservarAsiento
-	 * @description Realiza la reserva de un asiento
-	 * @param identificadorOcupante -> Identificador del ocupante que realiza la reserva
-	 * @return Mensaje de confirmación de reserva exitosa
-	 * @throws IllegalArgumentException -> Si el identificador es igual a null o comienza por null, si el tren está completamente lleno
-	 * o si no se ha podido realizar la reserva debido a fallo en otros métodos
+	 * @description Realiza la reserva de uno o varios asientos
+	 * @param identificadorReal -> Identificador real del ocupante que realiza la reserva
+	 * @return Mensaje de confirmación de reservas exitosas
+	 * @throws IllegalArgumentException -> Si el identificador es igual a null o comienza por null, en caso de que el número de reservas sea
+	 * o menor que 1, o mayor que la capacidad del tren, o mayor que el número de asientos disponibles del tren, si el tren está completamente lleno
+	 * o si no se ha podido realizar la reserva debido a fallo en otros métodos, 
 	 */
-	public String reservarAsiento(final String identificadorOcupante) {
+	public String reservarAsiento(String identificadorReal, int numReservas) {
+		int num = 0; // Para ayudar a la asignación de identificadores a los asientos
+		String identificadorOcupante; // Identificador compuesto por el nombre del identificador y el número de la reserva
+		String mensaje = ""; // Mensaje de confirmación de reservas
+		
 		// Comprobación de identificador inválido
-		if(identificadorOcupante.equals("null") || identificadorOcupante.startsWith("null")) 
+		if(identificadorReal.equals("null") || identificadorReal.startsWith("null")) 
 			throw new IllegalArgumentException("\nEl identificador null es inválido\n");
-
-		String mensaje = "";
-		// Si el tren está lleno...
-		if(libresTren() == 0) {
-			if(vagones.size() >= numMáxVagones) // ...y no se pueden añadir más vagones, regresa un valor nulo.
-				throw new IllegalArgumentException("\nError al realizar la reserva. El tren está completamente lleno\n");
-			else {	// ...y se pueden añadir más vagones, se añade un vagón más y se realiza la reserva
-				vagones.add(new Vagón(vagones.size()+1, numFilasVagón));	
-				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
-				mensaje = "<Reserva realizada correctamente>";
+		
+		// Comprobación de número de reservas válido
+		if(numReservas < 1 || numReservas > capacidadTren() || numReservas > libresTren()) 
+			throw new IllegalArgumentException("\nNo se puede reservar la cantidad de asientos indicada. "
+			+ "\nNo introduzca un número negativo, ni una cantidad de asientos superior a la capacidad del tren, ni una cantidad que supere el número de asientos que hay disponibles en el tren. "
+			+ "\nVaya a la consulta 7 para más información\n");
+		
+		// Mientras haya reservas
+		while(numReservas > 0) {	
+		num++;
+		identificadorOcupante = identificadorReal + String.valueOf(num);
+			// Si el tren está lleno...
+			if(libresTren() == 0) {
+				if(vagones.size() < numMáxVagones) {	// ...y se pueden añadir más vagones, se añade un vagón más y se realiza la reserva
+					vagones.add(new Vagón(vagones.size()+1, numFilasVagón));	
+					vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
+					mensaje = "<Operación realizada correctamente>";
+				} else throw new IllegalArgumentException("\nError al realizar la reserva\n"); // Esta comprobación realmente se usa al principio
+			} 
+			// Si el tren tiene algún asiento libre...
+			else { 
+				// Se obtiene el vagón menos lleno...
+				Vagón menosLleno = vagones.get(0); 
+				for (Vagón vagón : vagones)
+					if (menosLleno.getAsientosLibres() < vagón.getAsientosLibres())
+						menosLleno = vagón;
+				
+				// Y se realiza la reserva del asiento...
+				if (menosLleno.reservarAsiento(identificadorOcupante)) // ...en una situación normal.
+					mensaje = "<Operación realizada correctamente>"; 
+				else if(vagones.size() < numMáxVagones) { // ...si se pueden añadir más vagones.
+					vagones.add(new Vagón(vagones.size()+1, numFilasVagón));
+					vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
+					mensaje = "<Operación realizada correctamente. Se añadió un vagón para completar la operación>";
+				}
+				else throw new IllegalArgumentException("\nError al realizar la reserva\n"); // Esta comprobación realmente se usa al principio
 			}
-		} 
-		// Si el tren tiene algún asiento libre...
-		else { 
-			// Se obtiene el vagón menos lleno...
-			Vagón menosLleno = vagones.get(0); 
-			for (Vagón vagón : vagones)
-				if (menosLleno.getAsientosLibres() < vagón.getAsientosLibres())
-					menosLleno = vagón;
-			// Y se realiza la reserva del asiento...
-			if (menosLleno.reservarAsiento(identificadorOcupante)) // ...en una situación normal.
-				mensaje = "<Reserva realizada correctamente>"; 
-			else if(vagones.size() < numMáxVagones) { // ...si se pueden añadir más vagones.
-				vagones.add(new Vagón(vagones.size()+1, numFilasVagón));
-				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
-				mensaje = "<Reserva realizada correctamente. Se añadió un vagón para completar la operación>";
-			}
-			else throw new IllegalArgumentException("\nError al realizar la reserva\n");
+		--numReservas; // Se ha reservado un asiento
 		}
 		return mensaje;
 	}
@@ -266,6 +305,21 @@ public class Tren {
 			liberarAsiento(identificadorOcupante+i); // Llamada recursiva
 		
 		return "Se han eliminado las reservas de \"" + identificadorOcupante + "\" correctamente.";
+	}
+	
+	/***********************************
+	 * @name comprobarIdentificador
+	 * @description Comprueba un identificador al usuario
+	 * @throws IllegalArgumentException -> Lanzada si se indica un identificador que termina en número o null
+	 ***********************************/
+	public String comprobarIdentificador(String identificador) {
+		// Error si el identificador termina en número
+		if(Character.isDigit(identificador.charAt(identificador.length()-1))) 
+			throw new IllegalArgumentException("\nNo introduzca un identificador con algún número al final\n");
+		// Error si el identificador es null
+		if(identificador.equals("null") || identificador.startsWith("null"))
+			throw new IllegalArgumentException("\nEl identificador null es inválido\n");
+		return identificador;
 	}
 	
 	/**
@@ -294,8 +348,4 @@ public class Tren {
 			devolver+= "\n"+vagón;
 		return devolver;
 	}
-	
-
-
-	
 }

@@ -82,7 +82,8 @@ public class Principal {
 						
 					// Opción 6 - reservarAsiento
 					case 6:
-						System.out.println(tren.reservarAsiento(pedirIdentificador("Introduzca el nombre del ocupante del asiento a reservar: ")));
+						System.out.print("Introduzca el nombre del ocupante del asiento a reservar: ");
+						System.out.println(tren.reservarAsiento(tren.comprobarIdentificador(TECLADO.next()),1));
 						break;
 						
 					// Opción 7 - Parámetros generales del tren
@@ -102,7 +103,8 @@ public class Principal {
 						
 					// Opción 10 - Eliminar reservas de una persona
 					case 10:
-						System.out.println(tren.liberarAsiento(pedirIdentificador("Introduzca el nombre de quien desea eliminar todas sus reservas: ")));
+						System.out.print("Introduzca el nombre de quien desea eliminar todas sus reservas: ");
+						System.out.println(tren.liberarAsiento(tren.comprobarIdentificador(TECLADO.next())));
 						break;
 					
 					// Opción 11 - Modificar identificadores de las reservas de alguien
@@ -161,28 +163,20 @@ public class Principal {
 	 * @name comprarBilletes
 	 * @description Permite realizar una compra de billetes de forma secuencial, indicando identificador de la persona que los compra
 	 * y el número de asientos a reservar
-	 * @throws IllegalArgumentException -> Lanzada en caso de que pedirIdentificador falle, en caso de que el número de reservas sea
-	 * o menor que 1, o mayor que la capacidad del tren, o mayor que el número de asientos disponibles del tren y en caso de que
-	 * reservarAsiento falle
+	 * @throws IllegalArgumentException -> Lanzada en caso de que tren.comprobarIdentificador y/o tren.reservarAsiento fallen
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número de asientos a reservar
 	 ***********************************/
 	public static void comprarBilletes(Tren tren) {
 		// Identificador de la persona que compra los billetes
-		String identificador = pedirIdentificador("Introduzca el nombre de quien realiza las reservas: ");
+		System.out.print("Introduzca el nombre de quien realiza las reservas: ");
+		String identificador = tren.comprobarIdentificador(TECLADO.next());
 		
 		// Número de reservas a realizar
 		System.out.print("Introduzca la cantidad de asientos que desea reservar: ");
-		final int numReservas = TECLADO.nextInt();
-		
-		// Comprobación de parámetro correcto
-		if(numReservas < 1 || numReservas > tren.capacidadTren() || numReservas > tren.libresTren()) 
-			throw new IllegalArgumentException("\nNo se puede reservar la cantidad de asientos indicada. "
-			+ "\nNo introduzca un número negativo, ni una cantidad de asientos superior a la capacidad del tren, ni una cantidad que supere el número de asientos que hay disponibles en el tren. "
-			+ "\nVaya a la consulta 7 para más información\n");
+		int numReservas = TECLADO.nextInt();
 		
 		// Reserva de los billetes
-		for (int i = 0; i < numReservas; i++)
-			tren.reservarAsiento(identificador+(i+1)); 
+		tren.reservarAsiento(identificador, numReservas); 
 		
 		// Mensaje de confirmación
 		System.out.println("<Se han reservado correctamente " + numReservas + " asientos>");
@@ -213,52 +207,44 @@ public class Principal {
 	/***********************************
 	 * @name consultarOcupanteAsiento
 	 * @description Permite que el usuario consulte el identificador de un asiento en concreto
-	 * @throws IllegalArgumentException -> Lanzada si el número de vagón es menor que cero o mayor/igual que el número de vagones actuales,
-	 * si la fila es menor que cero o mayor/igual que las filas de cada vagón y si la columna es una posición distinta a VentanaIzq, PasilloIzq,
-	 * PasilloDer o VentanaDer
+	 * @throws IllegalArgumentException -> Si tren.getIdentificadorAsientoVagón falla
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número de vagón o la fila
 	 ***********************************/
 	public static void consultarOcupanteAsiento(Tren tren) {
 		// Declaración de variables
-		String identificador;
-		final int numVagón, fila, columna;
+		String identificador, posicion;
+		final int numVagón, fila;
 		
 		// Número de vagón y comprobación de parámetro correcto
 		System.out.print("Introduzca el vagón donde realizará la consulta [1," + tren.getNumVagones() + "] -> ");
-		numVagón = TECLADO.nextInt() - 1; // Se resta 1 para manejar el array correctamente
-		if(numVagón < 0 || numVagón >= tren.getNumVagones()) throw new IllegalArgumentException("\nNúmero de vagón excedido - Rango de vagones [1,"+tren.getNumVagones()+"]\n");
-		
-		// Fila y comprobación de fila correcta
+		numVagón = TECLADO.nextInt(); 
+			
+		// Fila
 		System.out.print("Introduzca la fila del asiento [1," + tren.getFilasVagones()+ "] -> ");
-		fila = TECLADO.nextInt() - 1; // Se resta 1 para manejar el array correctamente
-		if(fila < 0 || fila >= tren.getFilasVagones()) throw new IllegalArgumentException("\nNúmero de fila excedida - Rango de filas [1,"+tren.getFilasVagones()+"]\n");
+		fila = TECLADO.nextInt(); 
 		
 		// Columna y comprobación de columna correcta
 		System.out.print("Introduzca la posición del asiento (VentanaIzq, PasilloIzq, PasilloDer y VentanaDer) -> ");
-		switch(TECLADO.next().toLowerCase()) { // No importa si el usuario usa mayúsculas o minúsculas para indicar la posición
-			case "ventanaizq": columna = 0; break;
-			case "pasilloizq": columna = 1; break;
-			case "pasilloder": columna = 2; break;
-			case "ventanader": columna = 3; break;
-			default: throw new IllegalArgumentException("\nPosición no reconocida\n");
-		}
+		posicion = TECLADO.next();
 		
 		// Consulta del asiento
-		if((identificador = tren.getIdentificadorAsientoVagón(numVagón, fila, columna)) != null)
-			System.out.println("\n<Vagón: " + (numVagón+1) + " | Fila: " + (fila+1) + " | Columna: " + (columna+1) + " | ID: " + identificador + ">");
+		if((identificador = tren.getIdentificadorAsientoVagón(numVagón, fila, posicion)) != null)
+			System.out.println("\n<Vagón: " + (numVagón+1) + " | Fila: " + (fila+1) + " | Columna: " + posicion + " | ID: " + identificador + ">");
 		else
-			System.out.println("\n<Vagón: " + (numVagón+1) + " | Fila: " + (fila+1) + " | Columna: " + (columna+1) + " | Asiento libre>");
+			System.out.println("\n<Vagón: " + (numVagón+1) + " | Fila: " + (fila+1) + " | Columna: " + posicion + " | Asiento libre>");
 		
 	}
 	
 	/***********************************
 	 * @name modificarIdentificadoresDe
 	 * @description Permite que el usuario consulte el identificador de un asiento en concreto
-	 * @throws IllegalArgumentException -> Si pedirIdentificador o setIdentificadorAsientoVagón fallan
+	 * @throws IllegalArgumentException -> Si tren.comprobarIdentificador o tren.setIdentificadorAsientoVagón fallan
 	 ***********************************/
 	public static void modificarIdentificadoresDe(Tren tren) {
-		String antiguoOcupante = pedirIdentificador("Introduzca el identificador del antiguo ocupante: "); // Identificador a modificar
-		String nuevoOcupante = pedirIdentificador("Introduzca el identificador del nuevo ocupante: "); // Nuevo identificador
+		System.out.print("Introduzca el identificador del antiguo ocupante: ");
+		String antiguoOcupante = tren.comprobarIdentificador(TECLADO.next()); // Identificador a modificar
+		System.out.print("Introduzca el identificador del nuevo ocupante: ");
+		String nuevoOcupante = tren.comprobarIdentificador(TECLADO.next()); // Nuevo identificador
 		tren.setIdentificadorAsientoVagón(antiguoOcupante, nuevoOcupante); // Modificación
 		System.out.println("<Los identificadores correspondientes a \"" +antiguoOcupante + "\" se han modificado a \""+ nuevoOcupante + "\">"); // Mensaje
 	}
@@ -270,31 +256,12 @@ public class Principal {
 	 ***********************************/
 	public static void existenciaIdentificador(Tren tren) {
 		// Identificador a consultar
-		String identificador = pedirIdentificador("Introduzca el identificador a consultar: ");
+		System.out.print("Introduzca el identificador a consultar: ");
+		String identificador = tren.comprobarIdentificador(TECLADO.next());
 		// Existencia del identificador en el tren
 		if(tren.identificadorEnUso(identificador))
 			System.out.println("<El identificador \"" + identificador + "\" está en uso>");
 		else
 			System.out.println("<El identificador \"" + identificador + "\" aún no se ha usado por nadie>");
-	}
-	
-	/***********************************
-	 * @name pedirIdentificador
-	 * @description Pide un identificador al usuario
-	 * @throws IllegalArgumentException -> Lanzada si se indica un identificador 
-	 ***********************************/
-	public static String pedirIdentificador(String mensaje) {
-		// Identificador
-		String identificador;
-		System.out.print(mensaje);
-		identificador = TECLADO.next();
-		// Error si el identificador termina en número
-		if(Character.isDigit(identificador.charAt(identificador.length()-1))) 
-			throw new IllegalArgumentException("\nNo introduzca un identificador con algún número al final\n");
-		// Error si el identificador es null
-		if(identificador.equals("null") || identificador.startsWith("null"))
-			throw new IllegalArgumentException("\nEl identificador null es inválido\n");
-
-		return identificador;
 	}
 }
