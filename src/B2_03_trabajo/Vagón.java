@@ -9,7 +9,7 @@ package B2_03_trabajo;
 * Los atributos son el número de filas y columnas, el número de vagón, la matriz de asientos, los asientos totales y los asientos ocupados.
 * Los métodos son el constructor, los getters (getColumnas, getFilas, getNumVagón, getAsientosTotales, getAsientosOcupados, getAsientosLibres),
 * operaciones para conocer el estado del vagón (isLleno, isVacio), operaciones relacionadas con identificadores de asientos 
-* (getIdentificadorAsiento, setIdentificadorAsiento, identificadorEnUso, reservarAsiento,liberarAsiento) y métodos que muestran salidas 
+* (getIdentificadorAsiento, setIdentificadorAsiento, identificadorEnUso, reservarAsiento, liberarAsiento) y métodos que muestran salidas 
 * (mostrarOcupantesVagón y toString).
 ***********************************************************************/
 
@@ -34,7 +34,6 @@ public class Vagón {
 		this.numVagón = numVagón;
 		this.nFilas = numFilas;
 		this.asientosTotales = nFilas*nColumnas;
-		
 		this.asientos = new Asiento[nFilas][nColumnas];
 		for (int i = 0; i < asientos.length; i++)
 			for (int j = 0; j < asientos[i].length; j++) 
@@ -165,7 +164,7 @@ public class Vagón {
 			for (Asiento asiento : fila)
 				if (asiento.reservar(identificadorOcupante)) {
 					asientosOcupados++;
-					return true; // Devuelve que se reserva el asiento
+					return true;
 				}
 		return false;
 	}
@@ -203,7 +202,7 @@ public class Vagón {
 					devolver += String.format("\033[31m%-12s\u001B[0m| ",asientos[i][j].getIdentificadorOcupante()); // Identificadores en color rojo
 
 		}
-		return devolver+"\n     ---------------------------------------------------------------";
+		return devolver+"\n     ---------------------------------------------------------------\n";
 	}
 	
 	/**
@@ -212,7 +211,7 @@ public class Vagón {
 	 * Consideramos este método el toString() principal pero podría ser el anterior perfectamente. El criterio a seguir para determinar cuál
 	 * de los dos métodos es el toString() principal es el punto de vista desde el que se conciba. Si es el cliente el que ejecuta el programa,
 	 * no debería poder ver la información de los demás, solo si está ocupado o no. En cambio, si es un administrador debería poder conocer
-	 * todos los ocupantes del vagón.
+	 * todos los ocupantes del vagón
 	 * @return Cadena con la información del vagón, su disposición y la ocupación de todos sus asientos
 	 */
 	public String toString() {
@@ -225,7 +224,7 @@ public class Vagón {
 				devolver += asientos[i][j]+" | ";
 
 		}
-		return devolver+"\n     -----------------------------------";
+		return devolver+"\n     -----------------------------------\n";
 	}
 	
 }

@@ -92,8 +92,13 @@ public class Tren {
 	 * @description Modifica los identificadores de los asientos de cada vagón que estén reservados por la misma persona
 	 * @param antiguoOcupante -> Identificador de quien ocupa el asiento, necesario para encontrar el asiento a modificar
 	 * @param nuevoOcupante -> Nuevo identificador del asiento encontrado
+	 * @throws IllegalArgumentException -> Si se pretende modificar un identificador que no existía en el tren
 	 */
 	public void setIdentificadorAsientoVagón(String antiguoOcupante, String nuevoOcupante) {
+		// Comprobación de que el ocupante a modificar existe
+		if(!identificadorEnUso(antiguoOcupante)) 
+			throw new IllegalArgumentException("\nNo había ningún ocupante en el tren con el identificador antiguo indicado\n");
+		// Modificación de identificadores
 		for (int v = 0; v < vagones.size(); v++)
 			vagones.get(v).setIdentificadorAsiento(antiguoOcupante, nuevoOcupante);
 	}
@@ -132,7 +137,7 @@ public class Tren {
 	/**
 	 * @name libresTren
 	 * @description Devuelve el número de asientos que hay libres en el tren, teniendo en cuenta el número máximo de vagones.
-	 * El número de asientos libres del tren es la diferencia entre la capacidad del tren y los asientos que haya ocupados en el mismo
+	 * El número de asientos libres del tren es la diferencia entre la capacidad del tren y los asientos que haya ocupados
 	 * @return Número de asientos libres 
 	 */
 	public int libresTren() {
@@ -144,7 +149,7 @@ public class Tren {
 	 * @description Devuelve el número de asientos que están ocupados en el tren. Este es diferente a los métodos anteriores porque
 	 * los vagones se añaden según vayan llenándose estos, es decir, cuando se ocupen en su totalidad y sean necesarios más asientos.
 	 * Estrictamente, este método sería el opuesto a libresActualmente() porque indica los asientos ocupados en un momento determinado,
-	 * pero para este TAD, es irrelavante. El número de asientos ocupados del tren es la suma de asientos ocupados de cada vagón del tren
+	 * pero para este TAD, es irrelevante. El número de asientos ocupados del tren es la suma de asientos ocupados de cada vagón del tren
 	 * @return Número de asientos ocupados en el tren
 	 */
 	public int ocupadosTren() {
@@ -163,7 +168,6 @@ public class Tren {
 		// Ningún asiento está libre
 		for (Vagón vagón : vagones)
 			if (!vagón.isLleno()) return false;
-		
 		// No se pueden añadir más vagones al tren
 		return vagones.size() >= numMáxVagones;
 	}
@@ -231,8 +235,14 @@ public class Tren {
 			for (Vagón vagón : vagones)
 				if (menosLleno.getAsientosLibres() < vagón.getAsientosLibres())
 					menosLleno = vagón;
-			// Y se realiza la reserva del asiento.
-			if (menosLleno.reservarAsiento(identificadorOcupante)) mensaje = "<Reserva realizada correctamente>";
+			// Y se realiza la reserva del asiento...
+			if (menosLleno.reservarAsiento(identificadorOcupante)) // ...en una situación normal.
+				mensaje = "<Reserva realizada correctamente>"; 
+			else if(vagones.size() < numMáxVagones) { // ...si se pueden añadir más vagones.
+				vagones.add(new Vagón(vagones.size()+1, numFilasVagón));
+				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
+				mensaje = "<Reserva realizada correctamente. Se añadió un vagón para completar la operación>";
+			}
 			else throw new IllegalArgumentException("\nError al realizar la reserva\n");
 		}
 		return mensaje;
@@ -246,12 +256,14 @@ public class Tren {
 	 * @throws IllegalArgumentException -> Si el ocupante correspondiente no tenía ninguna reserva en el tren
 	 */
 	public String liberarAsiento(final String identificadorOcupante) { 
-		//TODO nunca se lanza esta excepción. Mañana meto el else de liberarAsiento de la clase Principal aquí.
+		// Comprobación de que el identificador indicado existe
+		if(!identificadorEnUso(identificadorOcupante)) throw new IllegalArgumentException("\nNo había ningún ocupante en el tren con el identificador antiguo indicado\n");
+		// Recorrido de todos los vagones con el identificador literal
 		for (Vagón vagón : vagones)
 			if (!vagón.liberarAsiento(identificadorOcupante)) throw new IllegalArgumentException("Error al liberar los asientos de \"" + identificadorOcupante+"\"");
-		
+		// Recorrido de todos los vagones con el identificador compuesto por el nombre de la persona más el número de billete
 		for(int i = 1; identificadorEnUso(identificadorOcupante+i); i++)
-			liberarAsiento(identificadorOcupante+i); // Llamada recursiva para liberar todo identificador compuesto por nombre de ocupante más número de billete
+			liberarAsiento(identificadorOcupante+i); // Llamada recursiva
 		
 		return "Se han eliminado las reservas de \"" + identificadorOcupante + "\" correctamente.";
 	}
