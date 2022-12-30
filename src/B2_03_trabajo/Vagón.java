@@ -11,7 +11,10 @@ package B2_03_trabajo;
 
 public class Vagón {
 	
-	final public static int nColumnas = 4; // Número constante de columnas para todo vagón
+	/**
+	 * Número constante de columnas para todo vagón
+	 */
+	final public static int nColumnas = 4;
 	final private int nFilas; // Número de filas del vagón
 	final private int numVagón; // Número de vagón
 	final private Asiento [][]asientos; // Matriz de asientos

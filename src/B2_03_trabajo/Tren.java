@@ -214,6 +214,7 @@ public class Tren {
 	/**
 	 * Realiza la reserva de uno o varios asientos
 	 * @param identificadorReal -> Identificador real del ocupante que realiza la reserva
+	 * @param numReservas --> Cantidad de reservas que realizarán a nombre del identificador
 	 * @return Mensaje de confirmación de reservas exitosas
 	 * @throws IllegalArgumentException -> Si el identificador es igual a null o comienza por null, en caso de que el número de reservas sea
 	 * o menor que 1, o mayor que la capacidad del tren, o mayor que el número de asientos disponibles del tren, si el tren está completamente lleno
@@ -290,9 +291,11 @@ public class Tren {
 	
 	/***********************************
 	 * Comprueba un identificador al usuario
+	 * @param identificador --> El que será comprobado
 	 * @throws IllegalArgumentException -> Lanzada si se indica un identificador que termina en número o null
+	 * @return El propio identificador
 	 ***********************************/
-	public String comprobarIdentificador(String identificador) {
+	public String comprobarIdentificador(final String identificador) {
 		// Error si el identificador termina en número
 		if(Character.isDigit(identificador.charAt(identificador.length()-1))) 
 			throw new IllegalArgumentException("\nNo introduzca un identificador con algún número al final\n");

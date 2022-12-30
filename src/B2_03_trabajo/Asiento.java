@@ -22,6 +22,7 @@ public class Asiento {
 	
 	/**
 	 * Se crea un asiento con ocupante
+	 * @param identificador --> Identificador del ocupante
 	 */
 	public Asiento(String identificador) {
 		identificadorOcupante = identificador;
