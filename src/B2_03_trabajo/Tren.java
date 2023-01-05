@@ -110,6 +110,9 @@ public class Tren {
 	 * @throws IllegalArgumentException -> Si se pretende modificar un identificador que no existía en el tren
 	 */
 	public void setIdentificadorAsientoVagón(String antiguoOcupante, String nuevoOcupante) {
+		// Comprobación de identificadores correctos
+		comprobarIdentificador(antiguoOcupante);
+		comprobarIdentificador(nuevoOcupante);
 		// Comprobación de que el ocupante a modificar existe
 		if(!identificadorEnUso(antiguoOcupante)) 
 			throw new IllegalArgumentException("\nNo había ningún ocupante en el tren con el identificador antiguo indicado\n");
@@ -202,6 +205,8 @@ public class Tren {
 	 * @return true si el tren contiene el asiento con tal identificador, false en otro caso 
 	 */
 	public boolean identificadorEnUso(final String identificadorOcupante) {
+		// Comprobación de identificador correcto
+		comprobarIdentificador(identificadorOcupante);
 		// Comprobación de identificador literal
 		for (Vagón vagón : vagones)
 			if (vagón.identificadorEnUso(identificadorOcupante)) return true;
@@ -225,9 +230,8 @@ public class Tren {
 		String identificadorOcupante; // Identificador compuesto por el nombre del identificador y el número de la reserva
 		String mensaje = ""; // Mensaje de confirmación de reservas
 		
-		// Comprobación de identificador inválido
-		if(identificadorReal.equals("null") || identificadorReal.startsWith("null")) 
-			throw new IllegalArgumentException("\nEl identificador null es inválido\n");
+		// Comprobación de identificador correcto
+		comprobarIdentificador(identificadorReal);
 		
 		// Comprobación de número de reservas válido
 		if(numReservas < 1 || numReservas > capacidadTren() || numReservas > libresTren()) 
@@ -249,7 +253,7 @@ public class Tren {
 			// Y se realiza la reserva del asiento...
 			if (menosLleno.reservarAsiento(identificadorOcupante)) // ...en una situación normal.
 				mensaje = "<Operación realizada correctamente>"; 
-			else if(vagones.size() < numMáxVagones) { // ..cuando hay que añadir más vagones.
+			else if(vagones.size() < numMáxVagones) { // ...cuando hay que añadir más vagones.
 				vagones.add(new Vagón(vagones.size()+1, numFilasVagón));
 				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
 				mensaje = "<Operación realizada correctamente. Se añadió un vagón para completar la operación>";
@@ -267,6 +271,8 @@ public class Tren {
 	 * @throws IllegalArgumentException -> Si el ocupante correspondiente no tenía ninguna reserva en el tren
 	 */
 	public String liberarAsiento(final String identificadorOcupante) { 
+		// Comprobación de identificador correcto
+		comprobarIdentificador(identificadorOcupante);
 		// Comprobación de que el identificador indicado existe
 		if(!identificadorEnUso(identificadorOcupante)) throw new IllegalArgumentException("\nNo había ningún ocupante en el tren con el identificador antiguo indicado\n");
 		// Recorrido de todos los vagones con el identificador literal

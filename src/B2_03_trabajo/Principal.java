@@ -79,7 +79,7 @@ public class Principal {
 					// Opción 6 - reservarAsiento
 					case 6:
 						System.out.print("Introduzca el nombre del ocupante del asiento a reservar: ");
-						System.out.println(tren.reservarAsiento(tren.comprobarIdentificador(TECLADO.next()),1));
+						System.out.println(tren.reservarAsiento(TECLADO.next(),1));
 						break;
 						
 					// Opción 7 - Parámetros generales del tren
@@ -100,7 +100,7 @@ public class Principal {
 					// Opción 10 - Eliminar reservas de una persona
 					case 10:
 						System.out.print("Introduzca el nombre de quien desea eliminar todas sus reservas: ");
-						System.out.println(tren.liberarAsiento(tren.comprobarIdentificador(TECLADO.next())));
+						System.out.println(tren.liberarAsiento(TECLADO.next()));
 						break;
 					
 					// Opción 11 - Modificar identificadores de las reservas de alguien
@@ -157,13 +157,14 @@ public class Principal {
 	/***********************************
 	 * Permite realizar una compra de billetes de forma secuencial, indicando identificador de la persona que los compra
 	 * y el número de asientos a reservar
+	 * @param tren -> Tren
 	 * @throws IllegalArgumentException -> Lanzada en caso de que tren.comprobarIdentificador y/o tren.reservarAsiento fallen
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número de asientos a reservar
 	 ***********************************/
 	public static void comprarBilletes(Tren tren) {
 		// Identificador de la persona que compra los billetes
 		System.out.print("Introduzca el nombre de quien realiza las reservas: ");
-		String identificador = tren.comprobarIdentificador(TECLADO.next());
+		String identificador = TECLADO.next();
 		
 		// Número de reservas a realizar
 		System.out.print("Introduzca la cantidad de asientos que desea reservar: ");
@@ -178,6 +179,7 @@ public class Principal {
 	
 	/***********************************
 	 * Imprime una lista de los parámetros generales del tren. Útil para comprobar si los métodos funcionan correctamente
+	 * @param tren -> Tren
 	 ***********************************/
 	public static void imprimirParámetrosTren(Tren tren) {
 		 // Parámetros fijos
@@ -199,6 +201,7 @@ public class Principal {
 	
 	/***********************************
 	 * Permite que el usuario consulte el identificador de un asiento en concreto
+	 * @param tren -> Tren
 	 * @throws IllegalArgumentException -> Si tren.getIdentificadorAsientoVagón falla
 	 * @throws InputMismatchException -> Lanzada cuando se indica en un formato incorrecto el número de vagón o la fila
 	 ***********************************/
@@ -229,25 +232,27 @@ public class Principal {
 	
 	/***********************************
 	 * Permite que el usuario consulte el identificador de un asiento en concreto
+	 * @param tren -> Tren
 	 * @throws IllegalArgumentException -> Si tren.comprobarIdentificador o tren.setIdentificadorAsientoVagón fallan
 	 ***********************************/
 	public static void modificarIdentificadoresDe(Tren tren) {
 		System.out.print("Introduzca el identificador del antiguo ocupante: ");
-		String antiguoOcupante = tren.comprobarIdentificador(TECLADO.next()); // Identificador a modificar
+		String antiguoOcupante = TECLADO.next(); // Identificador a modificar
 		System.out.print("Introduzca el identificador del nuevo ocupante: ");
-		String nuevoOcupante = tren.comprobarIdentificador(TECLADO.next()); // Nuevo identificador
+		String nuevoOcupante = TECLADO.next(); // Nuevo identificador
 		tren.setIdentificadorAsientoVagón(antiguoOcupante, nuevoOcupante); // Modificación
 		System.out.println("<Los identificadores correspondientes a \"" +antiguoOcupante + "\" se han modificado a \""+ nuevoOcupante + "\">"); // Mensaje
 	}
 	
 	/***********************************
 	 * Permite saber si el identificador indicado se encuentra en el tren
+	 * @param tren -> Tren
 	 * @throws IllegalArgumentException -> Si pedirIdentificador falla
 	 ***********************************/
 	public static void existenciaIdentificador(Tren tren) {
 		// Identificador a consultar
 		System.out.print("Introduzca el identificador a consultar: ");
-		String identificador = tren.comprobarIdentificador(TECLADO.next());
+		String identificador = TECLADO.next();
 		// Existencia del identificador en el tren
 		if(tren.identificadorEnUso(identificador))
 			System.out.println("<El identificador \"" + identificador + "\" está en uso>");
