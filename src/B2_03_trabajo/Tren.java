@@ -235,37 +235,27 @@ public class Tren {
 			+ "\nNo introduzca un número negativo, ni una cantidad de asientos superior a la capacidad del tren, ni una cantidad que supere el número de asientos que hay disponibles en el tren. "
 			+ "\nVaya a la consulta 7 para más información\n");
 		
-		// Mientras haya reservas
+		// Mientras haya reservas...
 		while(numReservas > 0) {	
-		num++;
-		identificadorOcupante = identificadorReal + String.valueOf(num);
-			// Si el tren está lleno...
-			if(libresTren() == 0) {
-				if(vagones.size() < numMáxVagones) {	// ...y se pueden añadir más vagones, se añade un vagón más y se realiza la reserva
-					vagones.add(new Vagón(vagones.size()+1, numFilasVagón));	
-					vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
-					mensaje = "<Operación realizada correctamente>";
-				} else throw new IllegalArgumentException("\nError al realizar la reserva\n"); // Esta comprobación realmente se usa al principio
-			} 
-			// Si el tren tiene algún asiento libre...
-			else { 
-				// Se obtiene el vagón menos lleno...
-				Vagón menosLleno = vagones.get(0); 
-				for (Vagón vagón : vagones)
-					if (menosLleno.getAsientosLibres() < vagón.getAsientosLibres())
-						menosLleno = vagón;
-				
-				// Y se realiza la reserva del asiento...
-				if (menosLleno.reservarAsiento(identificadorOcupante)) // ...en una situación normal.
-					mensaje = "<Operación realizada correctamente>"; 
-				else if(vagones.size() < numMáxVagones) { // ...si se pueden añadir más vagones.
-					vagones.add(new Vagón(vagones.size()+1, numFilasVagón));
-					vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
-					mensaje = "<Operación realizada correctamente. Se añadió un vagón para completar la operación>";
-				}
-				else throw new IllegalArgumentException("\nError al realizar la reserva\n"); // Esta comprobación realmente se usa al principio
+			num++;
+			identificadorOcupante = identificadorReal + String.valueOf(num);
+
+			// Se obtiene el vagón menos lleno...
+			Vagón menosLleno = vagones.get(0); 
+			for (Vagón vagón : vagones)
+				if (menosLleno.getAsientosLibres() < vagón.getAsientosLibres())
+					menosLleno = vagón;
+		
+			// Y se realiza la reserva del asiento...
+			if (menosLleno.reservarAsiento(identificadorOcupante)) // ...en una situación normal.
+				mensaje = "<Operación realizada correctamente>"; 
+			else if(vagones.size() < numMáxVagones) { // ..cuando hay que añadir más vagones.
+				vagones.add(new Vagón(vagones.size()+1, numFilasVagón));
+				vagones.get(vagones.size()-1).reservarAsiento(identificadorOcupante);
+				mensaje = "<Operación realizada correctamente. Se añadió un vagón para completar la operación>";
 			}
-		--numReservas; // Se ha reservado un asiento
+			else throw new IllegalArgumentException("\nError al realizar la reserva\n"); // Esta comprobación realmente se usa al principio
+			--numReservas; // Se ha reservado un asiento
 		}
 		return mensaje;
 	}
